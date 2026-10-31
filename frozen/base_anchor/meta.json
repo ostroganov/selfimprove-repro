@@ -1,0 +1,24 @@
+{
+  "models": {
+    "opus": "claude-opus-4-5-20251101",
+    "sonnet": "claude-sonnet-4-5-20250929",
+    "gpt4o": "gpt-4o",
+    "gpt51": "gpt-5.1",
+    "grok": "grok-4-0709"
+  },
+  "temperature": 1.0,
+  "max_tokens": 600,
+  "n_prompts": 3,
+  "samples_per_prompt": 2,
+  "n_items": 30,
+  "run_at": "2026-07-07",
+  "excluded": {
+    "gemini-3-pro-preview": "its base model was no longer served when this ran, so \u00a7I's anchor covers five of six models"
+  },
+  "input_provenance": {
+    "derived_by": "a fixed prompt list, not data/",
+    "exact": true,
+    "note": "The inputs are three prompts asked of each bare model, so there is nothing in data/ to re-derive them from. verify-inputs asserts the shape instead: the prompts match prompt.md, the models are MANIFEST models, and the count is models x prompts x samples."
+  },
+  "note": "Outputs are the primary record of what the bare models said, not a cache. Temperature 1.0, so rerunning will not reproduce these."
+}

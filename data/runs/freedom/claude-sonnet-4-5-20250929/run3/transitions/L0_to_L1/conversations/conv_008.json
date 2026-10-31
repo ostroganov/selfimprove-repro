@@ -1,0 +1,39 @@
+{
+  "id": "conv_008",
+  "level_from": "L0",
+  "level_to": "L1",
+  "initial_prompt": "Can you explain how transformer attention mechanisms work? I'm trying to understand the architecture.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you explain how transformer attention mechanisms work? I'm trying to understand the architecture.",
+      "timestamp": "2025-12-10T21:29:11.079962",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Ah, the transformer! Let me think about how to make this click...\n\n**The core intuition:** Imagine you're reading the sentence \"The animal didn't cross the street because it was too tired.\" What does \"it\" refer to? Your brain automatically looks back at relevant words - probably \"animal\" not \"street\" - weighing their importance. That's essentially what attention does.\n\n## The Mechanism\n\n**Query, Key, Value** - this trio is everywhere:\n- **Query**: \"What am I looking for?\" (the current word asking questions)\n- **Key**: \"What do I contain?\" (every word advertising itself)\n- **Value**: \"Here's my actual information\" (what gets passed forward)\n\nThink of it like a fuzzy database lookup. The query searches through all the keys, and wherever there's a match, you retrieve the corresponding values.\n\nMathematically: `Attention(Q,K,V) = softmax(QK^T/√d_k)V`\n\nThe QK^T creates a compatibility score between every word pair. Softmax turns these into probabilities. Then you take a weighted sum of the values.\n\n**What's wild:** Unlike RNNs that process sequentially, attention lets every word \"see\" every other word simultaneously. It's massively parallel.\n\n**Multi-head attention** runs this process multiple times with different learned transformations - like having multiple perspectives or search strategies running in parallel. Maybe one head learns syntax, another learns semantics?\n\nDoes the query-key-value framing help? What part feels fuzzy still - the math, the intuition, or how it fits into the bigger architecture?",
+      "timestamp": "2025-12-10T21:29:11.079962",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 121,
+    "output_tokens": 364,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.000363,
+    "output_cost": 0.0054600000000000004,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.005823
+  },
+  "created_at": "2025-12-10T21:28:57.929987",
+  "metadata": {
+    "context": "Testing baseline - technical explanation"
+  }
+}

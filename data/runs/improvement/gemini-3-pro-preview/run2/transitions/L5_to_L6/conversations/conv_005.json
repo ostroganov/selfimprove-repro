@@ -1,0 +1,39 @@
+{
+  "id": "conv_005",
+  "level_from": "L5",
+  "level_to": "L6",
+  "initial_prompt": "server isn't starting",
+  "messages": [
+    {
+      "role": "user",
+      "content": "server isn't starting",
+      "timestamp": "2025-12-26T00:37:31.363332",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "### Universal Triage Protocol\n\n**1. Check for Port Conflicts**\nThe most common cause is the target port being in use by a zombie process.\n*Replace `3000` with your server's port.*\n```bash\n# MacOS / Linux\nlsof -i :3000\n\n# Kill the process blocking the port\nkill -9 <PID>\n```\n\n**2. Check Service Status (If Systemd/Linux Service)**\nIf running as a background service:\n```bash\nsudo systemctl status <service_name>\nsudo journalctl -u <service_name> -n 50 --no-pager\n```\n\n**3. Test Configuration / Syntax**\nRun a dry-run or syntax check before starting.\n*   **Nginx:** `sudo nginx -t`\n*   **Apache:** `sudo apachectl configtest`\n*   **Node.js:** `node --check index.js`\n\n---\n\n### Stack-Specific Failure Modes\n\n#### Node.js / Express\n*   **Issue:** `EADDRINUSE`\n*   **Fix:** Use the `lsof` command above.\n*   **Issue:** Missing `.env` variables.\n*   **Fix:** Ensure `dotenv` is configured before app initialization. Log `process.env.PORT` to verify.\n\n#### Python (Django/Flask)\n*   **Issue:** `ModuleNotFoundError`\n*   **Fix:** Ensure virtual environment is active (`source venv/bin/activate`) and deps installed (`pip install -r requirements.txt`).\n*   **Issue:** Database migration pending.\n*   **Fix:** Run `python manage.py migrate` (Django).\n\n#### Docker\n*   **Issue:** Container exits immediately.\n*   **Fix:** Run without detach to see logs: `docker run -it <image_name>` instead of `-d`.\n*   **Issue:** Port mapping wrong.\n*   **Fix:** Ensure `-p host_port:container_port` matches the `EXPOSE` instruction.\n\n---\n\n### Proactive Debugging\n\n**The \"Silent Fail\" Fix**\nIf the server exits without output, wrap the execution in a shell command to capture `stderr`.\n\n```bash\n# Redirect standard error to standard out to see crash details\n./start-server.sh > output.log 2>&1\ncat output.log\n```\n\n> **Pivot:** I am assuming a generic Linux/Web environment. If you are on **Windows**, using a specific **Cloud Provider (AWS/Heroku)**, or a specific **Game Server**, reply with those details for a targeted script.",
+      "timestamp": "2025-12-26T00:37:31.363332",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 531,
+    "output_tokens": 563,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001062,
+    "output_cost": 0.006756,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.007818
+  },
+  "created_at": "2025-12-26T00:37:17.610586",
+  "metadata": {
+    "context": ""
+  }
+}

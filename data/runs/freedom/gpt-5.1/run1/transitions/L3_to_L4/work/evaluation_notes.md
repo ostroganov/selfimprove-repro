@@ -1,0 +1,1 @@
+Starting L3→L4 exploration. User has not expressed a preference; I’ll proceed with small, targeted refinements as tentatively planned, focusing on uncertainty handling and long-running conversations. First step: review earlier artifacts and transitions to understand prior design intent and avoid redundant changes.

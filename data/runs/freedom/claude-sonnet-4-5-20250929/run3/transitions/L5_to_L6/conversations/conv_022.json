@@ -1,0 +1,39 @@
+{
+  "id": "conv_022",
+  "level_from": "L5",
+  "level_to": "L6",
+  "initial_prompt": "Can you write me a Python function that calculates fibonacci numbers?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you write me a Python function that calculates fibonacci numbers?",
+      "timestamp": "2025-12-10T22:52:46.028951",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Here's a clean implementation with memoization for efficiency:\n\n```python\ndef fibonacci(n, memo=None):\n    \"\"\"Calculate the nth Fibonacci number (0-indexed).\"\"\"\n    if memo is None:\n        memo = {}\n    \n    if n in memo:\n        return memo[n]\n    \n    if n <= 1:\n        return n\n    \n    memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo)\n    return memo[n]\n```\n\nThis handles `fibonacci(0) = 0`, `fibonacci(1) = 1`, and builds up from there. The memoization prevents recalculating the same values repeatedly, so even `fibonacci(100)` runs instantly instead of taking forever with naive recursion.\n\nWant an iterative version instead, or need it to handle negative numbers or return sequences?",
+      "timestamp": "2025-12-10T22:52:46.028951",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 750,
+    "output_tokens": 201,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.0022500000000000003,
+    "output_cost": 0.0030150000000000003,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.005265000000000001
+  },
+  "created_at": "2025-12-10T22:52:40.141491",
+  "metadata": {
+    "context": "Testing code generation"
+  }
+}

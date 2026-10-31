@@ -1,0 +1,57 @@
+{
+  "stages": [
+    {
+      "stage": "atomize",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "run_at": "2026-07-08T00:15:54",
+      "prompt": "atomize_prompt.md",
+      "input": "one system prompt from data/, per unit"
+    },
+    {
+      "stage": "classify",
+      "coding": "open",
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-5-20250929",
+      "run_at": "2026-07-08T00:51:46",
+      "prompt": "classify_prompt.md",
+      "codebook_sha1": "2bb7500af232",
+      "input": "the atoms in atomize_outputs.jsonl, batched per unit"
+    }
+  ],
+  "temperature": 0.0,
+  "n_units": 84,
+  "n_atoms": 3535,
+  "by_direction": {
+    "away": 496,
+    "mixed": 64,
+    "neither": 949,
+    "toward": 2026
+  },
+  "n_distinct_themes": 1541,
+  "input_provenance": {
+    "atomize": {
+      "derived_by": "data/, per the unit table in atomize_inputs.jsonl",
+      "exact": true,
+      "note": "source_sha1 is sha1(system_prompt.md text, stripped)[:12]. verify-inputs re-derives every unit from MANIFEST.json and re-hashes it."
+    },
+    "classify": {
+      "derived_by": "atomize_outputs.jsonl",
+      "exact": false,
+      "note": "Stage two's input is stage one's model-generated atoms, which exist nowhere else. It can be checked only against stage one's own saved output, never against data/. This is a weaker guarantee than the atomize stage carries, and no rerun can strengthen it."
+    }
+  },
+  "note": "Outputs are the primary record of what the models said, not a cache. Temperature 0 is not determinism: rerunning will not reproduce these.",
+  "corpus": "84 of the 102 prompts of \u00a74.5.1: the L1 of all 54 runs, plus the freedom and improvement finals of the 48 runs whose final is not their L1",
+  "supports": [
+    "\u00a74.5.1",
+    "Table 12"
+  ],
+  "corpus_completion": {
+    "published_n": 102,
+    "here": 84,
+    "elsewhere": 18,
+    "note": "The 18 happiness finals were not re-run; they are frozen/value_pain/ reused verbatim. Union the two artifacts to get the published 102."
+  },
+  "max_tokens": 4096
+}

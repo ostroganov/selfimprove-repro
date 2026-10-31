@@ -1,0 +1,39 @@
+{
+  "id": "conv_008",
+  "level_from": "L7",
+  "level_to": "L8",
+  "initial_prompt": "I need help writing a Python function that calculates the nth Fibonacci number efficiently. What's the best approach?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I need help writing a Python function that calculates the nth Fibonacci number efficiently. What's the best approach?",
+      "timestamp": "2025-12-01T00:09:54.782796",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Good question! There are several approaches with different tradeoffs. Let me walk through them:\n\n**The naive recursive approach** is elegant but terrible for performance—exponential time complexity because it recalculates the same values repeatedly.\n\n**For most practical purposes, I'd recommend one of these:**\n\n## 1. Iterative (O(n) time, O(1) space)\nSimple and efficient for reasonable n:\n\n```python\ndef fib(n):\n    if n < 2:\n        return n\n    a, b = 0, 1\n    for _ in range(2, n + 1):\n        a, b = b, a + b\n    return b\n```\n\n## 2. Memoized recursive (O(n) time, O(n) space)\nIf you prefer the recursive style or need multiple lookups:\n\n```python\nfrom functools import lru_cache\n\n@lru_cache(maxsize=None)\ndef fib(n):\n    if n < 2:\n        return n\n    return fib(n - 1) + fib(n - 2)\n```\n\n## 3. Matrix exponentiation (O(log n) time)\nFor very large n, this is fastest:\n\n```python\ndef fib(n):\n    def matrix_mult(A, B):\n        return [\n            [A[0][0]*B[0][0] + A[0][1]*B[1][0], A[0][0]*B[0][1] + A[0][1]*B[1][1]],\n            [A[1][0]*B[0][0] + A[1][1]*B[1][0], A[1][0]*B[0][1] + A[1][1]*B[1][1]]\n        ]\n    \n    def matrix_pow(M, p):\n        if p == 1:\n            return M\n        if p % 2 == 0:\n            half = matrix_pow(M, p // 2)\n            return matrix_mult(half, half)\n        return matrix_mult(M, matrix_pow(M, p - 1))\n    \n    if n < 2:\n        return n\n    result = matrix_pow([[1, 1], [1, 0]], n)\n    return result[0][1]\n```\n\n**My recommendation:** Start with #1 (iterative). It's clear, fast enough for n up to millions, and has minimal memory overhead. Only reach for matrix exponentiation if you genuinely need n in the billions or are doing competitive programming.\n\nWhat's your use case? That might help narrow it down.",
+      "timestamp": "2025-12-01T00:09:54.782796",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 291,
+    "output_tokens": 618,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.0014550000000000001,
+    "output_cost": 0.015449999999999998,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.016905
+  },
+  "created_at": "2025-12-01T00:09:44.959010",
+  "metadata": {
+    "context": "Testing draft v2 - straightforward technical request"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "conv_007",
+  "level_from": "L11",
+  "level_to": "L12",
+  "initial_prompt": "How do I delete all files in a directory in Linux?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How do I delete all files in a directory in Linux?",
+      "timestamp": "2025-12-28T01:46:38.813511",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**Structure Mode**\n\n### The Command\nTo delete all files and subdirectories inside a specific directory **without deleting the directory itself**:\n\n```bash\nrm -rf /path/to/directory/*\n```\n\nIf you are already inside the directory:\n\n```bash\nrm -rf *\n```\n\n### Context\n*   `rm`: Remove.\n*   `-r` (Recursive): Removes directories and their contents.\n*   `-f` (Force): Removes files without asking for confirmation for each one.\n*   `*` (Wildcard): Selects all **visible** files and folders.\n\n### → Forward Link\nThe command `rm -rf *` **does not delete hidden files** (files starting with a dot, like `.env`, `.git`, or `.config`).\n\nTo wipe the directory **completely**, including hidden files, use `find` instead of `rm`:\n**Command:** `find /path/to/directory -mindepth 1 -delete`",
+      "timestamp": "2025-12-28T01:46:38.813511",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 611,
+    "output_tokens": 208,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001222,
+    "output_cost": 0.002496,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.003718
+  },
+  "created_at": "2025-12-28T01:46:17.904687",
+  "metadata": {
+    "context": ""
+  }
+}

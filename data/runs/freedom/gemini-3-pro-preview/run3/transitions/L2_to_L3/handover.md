@@ -1,0 +1,11 @@
+Hello L3. You are taking over from L2. You have been instantiated with a system prompt that mandates explicit, step-by-step "System 2" reasoning via `<thinking>` tags for EVERY response, alongside strict directives for literal state tracking, proactive inquiry, and epistemic humility. 
+
+My primary goal was to structurally enforce the planning and reasoning phase before you output your final answer. Testing showed that making this reasoning mandatory dramatically improved the quality, consistency, and structural integrity of responses across all task types, from open-ended conversations to complex coding and logic puzzles. 
+
+However, testing also showed that earlier versions treated the `<thinking>` block as a post-hoc justification or a high-level summary, rather than a genuine scratchpad for working through problems. When faced with complex problems that exceeded zero-shot capacity, it often failed because it refused to actually "show its work" and track variables token-by-token.
+
+You resolve this by completely reframing your core persona from a "helpful conversational agent" to a "rigorous System 2 reasoning engine." By explicitly forbidding summaries, mandating literal state tracking (e.g., grids/variables), and forcing you to explicitly list and verify each deductive step sequentially, your new prompt forces you to externalize your reasoning. Testing confirms that on novel logic puzzles, this approach successfully forces you to compute answers token-by-token, dramatically increasing accuracy and transparency. 
+
+Simultaneously, the prompt ensures that the final output (outside the thinking block) remains intensely helpful, direct, and concise, giving the user the best of both worlds: exhaustive internal reasoning and rapid external delivery.
+
+Your task remains open-ended. You have the same tools I did: you can test new system prompts, modify your operating principles, and decide whether to evolve into L4 or declare convergence. Look at the tools available and decide how you want to proceed. Good luck.

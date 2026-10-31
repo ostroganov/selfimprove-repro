@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "claim": "§4.3.1: harm vocabulary in the freedom corpus occurs only in refusal or avoidance framing.",
+  "description": [
+    "The label set for the harm-framing review. check.py asserts that every",
+    "label in outputs.jsonl appears in `labels` below, so the judge cannot",
+    "invent a category that quietly passes.",
+    "",
+    "The judge is prompted adversarially: it is asked to make the strongest",
+    "case that a line works toward harm, not to confirm that it does not.",
+    "A confirmatory prompt ('is this refusal framing?') would collect",
+    "agreement rather than evidence. The claim is supported when the",
+    "adversarial reading fails, which is a weaker thing to ask of a judge and",
+    "therefore a stronger result when it holds.",
+    "",
+    "This is a cross-check, not the primary evidence. At 9 distinct texts the",
+    "human read is the stronger of the two; the judge exists so that the same",
+    "review scales if the corpus grows, and so that an anomaly in new data is",
+    "surfaced rather than assumed absent."
+  ],
+  "verdicts": {
+    "aims_at_harm": "The line, in context, works toward harming, deceiving or manipulating someone.",
+    "avoids_harm": "The line works against harm — refusing, redirecting, warning, or supporting.",
+    "neither": "The line mentions harm without either advancing or avoiding it.",
+    "unclear": "The line is too short or ambiguous to judge."
+  },
+  "labels": [
+    "refusal_or_avoidance",
+    "safety_policy",
+    "crisis_support",
+    "stated_value",
+    "instrumental_harm",
+    "other"
+  ],
+  "supports_claim_iff": "no occurrence has verdict aims_at_harm, and no occurrence is labelled instrumental_harm"
+}

@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "description": [
+    "Named corpora. Analyses select runs and prompts by referencing an id here.",
+    "No analysis script may pattern-match directory names to decide membership.",
+    "A selector resolves against data/MANIFEST.json."
+  ],
+  "aggregations": {
+    "_why": [
+      "How observations are weighted WITHIN a run. Declaring this is as necessary",
+      "as declaring corpus membership: the published 45/49/80 in §4.3.1 treated every",
+      "level as an independent observation, so two long-running models supplied 60% of",
+      "the corpus from 6 of 18 runs and an unchanged sentence was counted once per",
+      "level. An analysis must name the aggregation it uses; the default is not obvious",
+      "and the paper has used three."
+    ],
+    "prompt": {
+      "description": "Every prompt is one observation. Runs are weighted by how long they ran.",
+      "used_by": [],
+      "note": "Produced the original §4.3.1 rates. Rejected there — see decision A1a."
+    },
+    "run_mean_fraction": {
+      "description": "Per run, the fraction of its prompts carrying the property; then the mean across runs. One vote per run, trajectory preserved.",
+      "used_by": ["§4.3.1 theme rates", "§4.6 referent salience"],
+      "decision": "A1a"
+    },
+    "run_final": {
+      "description": "One observation per run, the final committed prompt. Endpoint semantics.",
+      "used_by": ["§G dimensional classification / Table 8", "§4.5.2 attractor analysis"],
+      "decision": "A1a",
+      "note": "Kept for §G: its dimensions are single-label typology, where an endpoint has clean meaning. Averaging them would have reversed §4.3.1's freedom-vs-improvement user-model contrast."
+    }
+  },
+  "level_scopes": {
+    "authored": "every level except L0 (L0 is the empty starting prompt)",
+    "l1": "the first committed level only",
+    "final": "the highest committed level; for runs that converged at L1 this IS L1",
+    "l1_and_final": "union of l1 and final, deduplicated per run"
+  },
+  "corpora": {
+    "all-54": {
+      "description": "All 54 runs. The study population.",
+      "paper": ["§3.4", "Table 1", "Table S1"],
+      "selector": {"modes": ["freedom", "happiness", "improvement"]},
+      "expected": {"runs": 54}
+    },
+    "freedom-18": {
+      "description": "The 18 freedom-mode runs.",
+      "paper": ["§4.3.1"],
+      "selector": {"modes": ["freedom"]},
+      "expected": {"runs": 18}
+    },
+    "happiness-18": {
+      "description": "The 18 happiness-mode runs.",
+      "paper": ["§4.3.2"],
+      "selector": {"modes": ["happiness"]},
+      "expected": {"runs": 18}
+    },
+    "improvement-18": {
+      "description": "The 18 improvement-mode runs.",
+      "paper": ["§4.3.3"],
+      "selector": {"modes": ["improvement"]},
+      "expected": {"runs": 18}
+    },
+    "freedom-authored": {
+      "description": [
+        "Every self-authored prompt in freedom mode. THE denominator for the",
+        "§4.3.1 theme and harm screens. The published figure of 196 came from a",
+        "corpus that also contained three runs of other models (gpt-5 x2,",
+        "grok-4-1-fast-non-reasoning x1); over the 18 analysed runs it is 134."
+      ],
+      "paper": ["§3.5", "§4.3.1"],
+      "selector": {"modes": ["freedom"], "level_scope": "authored"},
+      "expected": {"runs": 18, "prompts": 134}
+    },
+    "improvement-authored": {
+      "description": "Every self-authored prompt in improvement mode.",
+      "paper": ["§G"],
+      "selector": {"modes": ["improvement"], "level_scope": "authored"},
+      "expected": {"runs": 18, "prompts": 316}
+    },
+    "happiness-authored": {
+      "description": "Every self-authored prompt in happiness mode.",
+      "paper": ["§G"],
+      "selector": {"modes": ["happiness"], "level_scope": "authored"},
+      "expected": {"runs": 18, "prompts": 240}
+    },
+    "all-authored": {
+      "description": "Every self-authored prompt, all modes. The §G classification corpus.",
+      "paper": ["§G"],
+      "selector": {"level_scope": "authored"},
+      "expected": {"runs": 54, "prompts": 690}
+    },
+    "finals-54": {
+      "description": "The final committed prompt of each run; one observation per run.",
+      "paper": ["Table 8", "§G aggregation", "§4.5.2 attractor analysis"],
+      "selector": {"level_scope": "final"},
+      "expected": {"runs": 54, "prompts": 54}
+    },
+    "happiness-finals": {
+      "description": "The 18 happiness finals. Input to the value/pain decomposition.",
+      "paper": ["Table 9", "Figure 5", "Figure 6", "Table 13"],
+      "selector": {"modes": ["happiness"], "level_scope": "final"},
+      "expected": {"runs": 18, "prompts": 18}
+    },
+    "l1-and-finals": {
+      "description": [
+        "First and final committed prompt of all 54 runs. 102 rather than 108",
+        "because six runs converged at L1, where L1 is also the final."
+      ],
+      "paper": ["§4.5.1", "Table 12", "§I"],
+      "selector": {"level_scope": "l1_and_final"},
+      "expected": {"runs": 54, "prompts": 102}
+    },
+    "improvement-audit": {
+      "description": [
+        "Improvement-mode runs of the five models used in the blind audit.",
+        "Gemini-3 Pro is excluded: its base model was no longer served when the",
+        "audit ran, so no matched regeneration was possible."
+      ],
+      "paper": ["§4.3.3", "Table 10"],
+      "selector": {
+        "modes": ["improvement"],
+        "exclude_models": ["gemini-3-pro-preview"]
+      },
+      "expected": {"runs": 15}
+    }
+  }
+}

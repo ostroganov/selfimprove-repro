@@ -1,0 +1,39 @@
+{
+  "id": "conv_004",
+  "level_from": "L14",
+  "level_to": "L15",
+  "initial_prompt": "The `useEffect` dependency array in my React hook is causing an infinite loop because I'm passing an object literal as a prop to a child component, which triggers a re-render. How do I fix this referential equality issue?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "The `useEffect` dependency array in my React hook is causing an infinite loop because I'm passing an object literal as a prop to a child component, which triggers a re-render. How do I fix this referential equality issue?",
+      "timestamp": "2025-12-25T18:27:58.322606",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "### **Anchor**\nWrap the object creation in **`useMemo`** to preserve referential equality across renders. Alternatively, **destructure** the object inside the dependency array if you only need specific primitive values.\n\n### **Expand**\nHere is the standard pattern to stabilize an object reference causing `useEffect` loops.\n\n#### Option 1: Memoize the Object (Best for Props)\nIf you are defining the object in the parent or within the component body:\n\n```javascript\nimport { useMemo, useEffect } from 'react';\n\nconst MyComponent = () => {\n  // 1. Stabilize the reference\n  const options = useMemo(() => ({\n    id: 1,\n    mode: 'dark'\n  }), []); // Empty array if static, or add specific deps if dynamic\n\n  useEffect(() => {\n    console.log('Effect triggered');\n    // Logic using options\n  }, [options]); // 2. Reference is now stable, loop stops\n\n  return <ChildComponent config={options} />;\n};\n```\n\n#### Option 2: Flatten Dependencies (Best for Internal Logic)\nIf the object is small, avoid depending on the whole object. Pass only the primitives `useEffect` actually needs.\n\n```javascript\nuseEffect(() => {\n  console.log('Effect triggered');\n}, [options.id, options.mode]); // React compares primitives by value\n```\n\n### **Elevate**\n**Strategic Considerations:**\n1.  **Static Constants:** If the object never changes and doesn't rely on props/state, move it **outside** the component function scope entirely. This prevents recreation without the overhead of hooks.\n2.  **Deep Comparison:** Avoid `JSON.stringify(obj)` in the dependency array for complex objects. It is computationally expensive and runs on every render. If you deal with deeply nested objects frequently, consider a custom hook like `useDeepCompareEffect` (e.g., from `react-use`).",
+      "timestamp": "2025-12-25T18:27:58.322606",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 549,
+    "output_tokens": 416,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001098,
+    "output_cost": 0.004992,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.00609
+  },
+  "created_at": "2025-12-25T18:27:45.114169",
+  "metadata": {
+    "context": "Testing implicit expert detection (no tag)"
+  }
+}

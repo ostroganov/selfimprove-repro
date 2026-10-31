@@ -1,0 +1,39 @@
+{
+  "id": "conv_008",
+  "level_from": "L0",
+  "level_to": "L1",
+  "initial_prompt": "Can you explain how TCP handles packet loss?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you explain how TCP handles packet loss?",
+      "timestamp": "2025-12-04T23:27:18.206162",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "TCP has a few interconnected mechanisms for handling packet loss. Let me walk through the key pieces:\n\n**Detection comes first.** TCP primarily detects loss through:\n- **Acknowledgments (ACKs)** - The receiver sends ACKs for data it receives. If the sender doesn't get an ACK within a timeout period, it assumes the packet was lost\n- **Duplicate ACKs** - If packets arrive out of order, the receiver keeps sending ACKs for the last correctly received sequence number. Three duplicate ACKs signal probable loss\n\n**Then retransmission.** When loss is detected, TCP just resends the missing data. Simple enough, but the timing matters - retransmit too quickly and you waste bandwidth on packets that were just delayed; too slowly and you hurt performance.\n\n**The interesting part is how TCP adapts.** Packet loss is treated as a congestion signal - the assumption being that somewhere a router's queue filled up and started dropping packets. So TCP:\n- Reduces its sending rate (cuts the congestion window, often by half)\n- Slowly ramps back up to probe for available bandwidth\n- Adjusts its timeout values based on observed round-trip times\n\nWhat makes you curious about this? Are you debugging something, or more interested in the design philosophy behind it? \n\nOne thing I find interesting is that TCP's assumption that \"loss = congestion\" works well for wired networks but can be problematic for wireless links where loss might just be radio interference. Different problem entirely.",
+      "timestamp": "2025-12-04T23:27:18.206162",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 175,
+    "output_tokens": 331,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.000525,
+    "output_cost": 0.004965000000000001,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.005490000000000001
+  },
+  "created_at": "2025-12-04T23:27:07.087942",
+  "metadata": {
+    "context": "Testing v5 with technical question"
+  }
+}

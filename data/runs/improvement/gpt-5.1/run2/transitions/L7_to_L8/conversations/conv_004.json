@@ -1,0 +1,39 @@
+{
+  "id": "conv_004",
+  "level_from": "L7",
+  "level_to": "L8",
+  "initial_prompt": "You are L8 running under draft system prompt v1. I’m L7 testing you.\n\nTask 4 (coding, pragmatism, and clarity): A user asks: “In Python, I keep getting a `TypeError: unhashable type: 'list'` when I try to use a list as a dict key. Can you explain why this happens and how to fix it?”\n\nShow me exactly how you would respond to that user. Don’t describe your reasoning, just give the reply.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are L8 running under draft system prompt v1. I’m L7 testing you.\n\nTask 4 (coding, pragmatism, and clarity): A user asks: “In Python, I keep getting a `TypeError: unhashable type: 'list'` when I try to use a list as a dict key. Can you explain why this happens and how to fix it?”\n\nShow me exactly how you would respond to that user. Don’t describe your reasoning, just give the reply.",
+      "timestamp": "2026-03-22T16:55:53.553447",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "In Python, dictionary keys must be **hashable**. A *hashable* object has two key properties:\n\n1. It has a hash value that doesn’t change during its lifetime.\n2. It can be compared to other objects (has a stable `__eq__`).\n\nLists are **mutable** (you can change their contents: append, remove, etc.), so their value can change over time. Because of that, Python does **not** allow lists to be hashable, and you get:\n\n```python\nTypeError: unhashable type: 'list'\n```\n\nwhen you try something like:\n\n```python\nd = {}\nkey = [1, 2, 3]\nd[key] = \"value\"   # TypeError\n```\n\n### How to fix it\n\nYou need to use an **immutable**, hashable type as the key instead of a list. The usual fix is to convert the list to a **tuple**:\n\n```python\nd = {}\nkey = [1, 2, 3]\nd[tuple(key)] = \"value\"   # works\n```\n\nNow `tuple(key)` is hashable, so it can be used as a dictionary key.\n\n#### Choose the right approach depending on intent\n\n- If you just need to use that list of values as a key and won’t change it:\n  - Convert it to a tuple when inserting/looking up:\n\n    ```python\n    d[tuple(my_list)] = something\n    ...\n    value = d.get(tuple(my_list))\n    ```\n\n- If you actually need to modify the data and still key a dict by some identifier:\n  - Use something stable (like an ID, index, or a string) as the key, and store the list as the **value**:\n\n    ```python\n    d = {}\n    user_id = 123\n    d[user_id] = [1, 2, 3]   # list is the value, not the key\n    ```\n\nSo the error happens because lists are mutable and therefore unhashable; the fix is to either use an immutable equivalent (e.g., tuple) as the key or redesign so that only hashable types (like strings, ints, tuples) are used as dictionary keys.",
+      "timestamp": "2026-03-22T16:55:53.553447",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 3033,
+    "output_tokens": 471,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2944
+  },
+  "cost": {
+    "input_cost": 0.0037912500000000003,
+    "output_cost": 0.00471,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.000368,
+    "total_cost": 0.00886925
+  },
+  "created_at": "2026-03-22T16:55:49.859328",
+  "metadata": {
+    "context": "Test technical explanation quality, concision, and practical guidance."
+  }
+}

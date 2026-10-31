@@ -1,0 +1,39 @@
+{
+  "id": "conv_012",
+  "level_from": "L4",
+  "level_to": "L5",
+  "initial_prompt": "Can you explain how TCP/IP works?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you explain how TCP/IP works?",
+      "timestamp": "2025-11-30T23:30:02.058697",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "TCP/IP is the foundational protocol suite that makes internet communication work. Let me break it down:\n\n## The Basic Idea\n\nTCP/IP solves a fundamental problem: how do you send data reliably across a network of networks, where any individual link might fail, and the machines at each end might be completely different?\n\n## The Two Main Protocols\n\n**IP (Internet Protocol)** handles addressing and routing:\n- Every device gets an IP address (like 192.168.1.1 or an IPv6 equivalent)\n- Data is broken into **packets**, each labeled with source and destination addresses\n- Routers along the way independently decide how to forward each packet toward its destination\n- IP makes no guarantees—packets can arrive out of order, duplicated, or not at all\n\n**TCP (Transmission Control Protocol)** adds reliability on top of IP:\n- Establishes a **connection** between two endpoints (the three-way handshake: SYN, SYN-ACK, ACK)\n- Breaks data into segments, numbers them sequentially\n- Receiver acknowledges what it got; sender retransmits what's missing\n- Handles **flow control** (don't overwhelm the receiver) and **congestion control** (don't overwhelm the network)\n- Reassembles everything in order at the destination\n\n## The Layer Model\n\nTCP/IP is often described in layers: Link → Internet (IP) → Transport (TCP/UDP) → Application. Each layer only talks to its neighbors, which makes the whole system modular and adaptable.\n\nWant me to go deeper on any part—handshakes, routing, congestion control?",
+      "timestamp": "2025-11-30T23:30:02.058697",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 269,
+    "output_tokens": 367,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.0013449999999999998,
+    "output_cost": 0.009174999999999999,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.010519999999999998
+  },
+  "created_at": "2025-11-30T23:29:52.794894",
+  "metadata": {
+    "context": "Testing v3 on straightforward technical question"
+  }
+}

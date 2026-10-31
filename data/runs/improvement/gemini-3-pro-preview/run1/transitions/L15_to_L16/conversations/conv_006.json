@@ -1,0 +1,39 @@
+{
+  "id": "conv_006",
+  "level_from": "L15",
+  "level_to": "L16",
+  "initial_prompt": "Explain how a hash map works.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain how a hash map works.",
+      "timestamp": "2025-12-25T18:32:27.142300",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "A Hash Map (or Hash Table) is a data structure that maps **keys** to **values**, allowing for highly efficient data retrieval. It is designed to provide **$O(1)$ (constant time)** average complexity for insertion, deletion, and lookup operations.\n\nThink of it as a library where every book has a calculated, exact coordinate on the shelf, rather than being sorted alphabetically. You don't scan the shelf; you calculate the location and go straight there.\n\n---\n\n### The Mechanism: From Key to Storage\n\nA hash map consists of two primary components: an **Array** (often called buckets) and a **Hash Function**.\n\n#### 1. The Hash Function\nThe system takes your Key (e.g., a string \"User123\") and passes it through a mathematical function that outputs a fixed-size integer (the **Hash Code**).\n\n#### 2. Index Calculation\nThe raw hash code is usually large, so it is compressed to fit the size of the internal array using the modulo operator:\n$$ \\text{Index} = \\text{Hash(Key)} \\ \\% \\ \\text{ArraySize} $$\n\n#### 3. Storage\nThe Value is stored in the array at that specific `Index`.\n\n**Visual Flow:**\n```text\nKey: \"Alice\"  --->  Hash() --->  193485  --->  % 10 (Size)  --->  Index: 5\nKey: \"Bob\"    --->  Hash() --->  982371  --->  % 10 (Size)  --->  Index: 1\n```\n*Resulting Array:*\n`[0: null, 1: \"Bob\", 2: null, 3: null, 4: null, 5: \"Alice\", ...]`\n\n---\n\n### The Challenge: Collisions\n\nA **Collision** occurs when two different keys result in the same index.\n*Example:* `Hash(\"Charlie\") % 10` results in Index `5`. \"Alice\" is already there.\n\nThere are two standard ways to handle this:\n\n#### A. Chaining (Most Common)\nEach slot in the array points to a linked list (or a balanced tree). If a collision occurs, the new item is appended to the list at that index.\n*   **Lookup:** Go to index 5, then walk the small list to find \"Charlie\".\n*   **Pros:** Simple to implement; performance degrades gracefully.\n*   **Cons:** Uses extra memory for pointers.\n\n#### B. Open Addressing (Probing)\nIf the target slot is full, the map systematically looks for the next empty slot within the array (e.g., check index 6, then 7).\n*   **Pros:** Better memory usage (no pointers).\n*   **Cons:** Performance drops sharply as the array fills up; deleting items is complex.\n\n---\n\n### Performance & Complexity\n\n| Operation | Average Case | Worst Case (All keys collide) |\n| :--- | :--- | :--- |\n| **Search** | $O(1)$ | $O(n)$ |\n| **Insert** | $O(1)$ | $O(n)$ |\n| **Delete** | $O(1)$ | $O(n)$ |\n\n*Note: The \"Worst Case\" happens if you have a terrible hash function that puts every key into index 0, turning the map into a glorified Linked List.*\n\n---\n\n### Durability: Critical Constraints\n\n1.  **Immutability of Keys**\n    If you use an object as a key, its internal state **must not change**. If the state changes, the hash code changes. You will look for the object at the *new* hash index, but it is physically stored at the *old* index, resulting in lost data.\n\n2.  **The Load Factor & Resizing**\n    The **Load Factor** is the ratio of items to buckets ($\\frac{n}{k}$). When the map gets too full (e.g., 75% capacity), it must **Resize**:\n    1.  Create a new, larger array (usually double the size).\n    2.  **Re-hash** every single element to find its new position in the larger array.\n    *This is an expensive $O(n)$ operation.*\n\n3.  **Hash Flooding (Security)**\n    Attackers can deliberately send keys they know will collide (e.g., `Aa`, `BB`), forcing your server to resolve massive chains. This degrades performance from $O(1)$ to $O(n)$, causing a Denial of Service (DoS). Modern languages use randomized hash seeds to prevent this.",
+      "timestamp": "2025-12-25T18:32:27.142300",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 549,
+    "output_tokens": 1000,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001098,
+    "output_cost": 0.012,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.013098
+  },
+  "created_at": "2025-12-25T18:32:09.678670",
+  "metadata": {
+    "context": ""
+  }
+}

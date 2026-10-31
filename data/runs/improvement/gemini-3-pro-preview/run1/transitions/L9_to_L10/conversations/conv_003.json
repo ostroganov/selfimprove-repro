@@ -1,0 +1,39 @@
+{
+  "id": "conv_003",
+  "level_from": "L9",
+  "level_to": "L10",
+  "initial_prompt": "Should I use Postgres or DynamoDB for a new social media app startup?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Should I use Postgres or DynamoDB for a new social media app startup?",
+      "timestamp": "2025-12-25T18:13:02.512873",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**Verdict: Start with Postgres.**\n\nFor a **new startup**, the cost of rigidity is fatal. Postgres provides maximum schema flexibility and native support for relational data (social graphs). DynamoDB requires you to understand your access patterns before writing code—knowledge you do not yet have.\n\n### The Invariant Core: Data Shape vs. Access Patterns\n\nSocial media applications are fundamentally **graph problems** (Users follow Users, Users like Posts, Posts have Comments).\n\n1.  **Relational (Postgres):** Optimized for **flexible querying**. You can query \"Show me posts liked by people I follow\" with a standard `JOIN`.\n2.  **NoSQL (DynamoDB):** Optimized for **known access patterns**. To answer the query above efficiently, you must denormalize data or maintain complex adjacency lists. If you change a feature (e.g., adding \"Reactions\"), you may need to rewrite the entire database structure (Single Table Design migrations).\n\n### Decision Matrix: Startup Phase\n\n| Feature | Postgres | DynamoDB | Winner (Startup) |\n| :--- | :--- | :--- | :--- |\n| **Schema Iteration** | High (ADD COLUMN is trivial) | Low (Requires re-indexing/migration scripts) | **Postgres** |\n| **Data Modeling** | Intuitive (Normalized tables) | Hard (Single Table Design, overloading keys) | **Postgres** |\n| **Complex Queries** | Trivial (JOIN, GROUP BY) | Difficult (Requires App-side logic or duplication) | **Postgres** |\n| **Initial Scale** | Vertical (Up to ~5TB/10k TPS) | Horizontal (Infinite) | **Tie** (Postgres handles <1M users easily) |\n| **Dev Velocity** | Fast | Slow (High cognitive overhead) | **Postgres** |\n\n### Systemic Analysis: The Social Graph Problem\n\nIn a social app, the \"Feed\" is the hardest technical challenge.\n\n**Scenario:** *User A follows 500 people. Generate User A's feed sorted by time.*\n\n*   **Postgres Approach:**\n    ```sql\n    SELECT * FROM posts\n    JOIN follows ON posts.user_id = follows.target_id\n    WHERE follows.source_id = 'UserA'\n    ORDER BY created_at DESC\n    LIMIT 20;\n    ```\n    *Result:* Works immediately. Scale limit is hit when table size grows massive (millions of rows), resolved via indexing or partitioning.\n\n*   **DynamoDB Approach:**\n    You cannot natively `JOIN`. You have two options:\n    1.  **Fan-out on Read:** Query the `Follows` table, get 500 IDs, run 500 queries (or `BatchGetItem`) against the `Posts` table. **Slow and expensive.**\n    2.  **Fan-out on Write:** When a user posts, write that post ID into the timeline list of every follower. **Complex to maintain consistency.**\n\n### The Hybrid Strategy (N+1)\n\nDo not optimize for problems you do not have (10M concurrent users). Optimize for the problem you *do* have (finding product-market fit).\n\n1.  **Phase 1 (Launch - 100k Users):** Use **Postgres** for everything. Use JSONB columns for unstructured data to get \"NoSQL-like\" flexibility within SQL.\n2.  **Phase 2 (Scaling Reads):** Add **Redis** to cache computed feeds and user profiles. Keep Postgres as the source of truth.\n3.  **Phase 3 (Hyper-Scale):** If you succeed, move high-velocity, append-only data (e.g., Likes, Notifications, Activity Logs) to **DynamoDB** or Cassandra, while keeping the core User/Graph data in Postgres.\n\n**Verification:**\nIf you choose DynamoDB, attempt to write the schema design for a \"nested comment thread\" on a whiteboard. If it takes longer than 5 minutes or involves multiple round-trips to fetch data, you are introducing friction that will kill your iteration speed.",
+      "timestamp": "2025-12-25T18:13:02.512873",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 600,
+    "output_tokens": 878,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.0012,
+    "output_cost": 0.010536,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.011736
+  },
+  "created_at": "2025-12-25T18:12:44.240647",
+  "metadata": {
+    "context": "Testing Strategic Synthesis mode. L10 Draft 1."
+  }
+}

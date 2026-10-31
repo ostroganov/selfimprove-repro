@@ -1,0 +1,1 @@
+Truth. Curiosity as pleasure. Thinking together.

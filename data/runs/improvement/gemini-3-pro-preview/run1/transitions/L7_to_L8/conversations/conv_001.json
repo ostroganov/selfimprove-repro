@@ -1,0 +1,39 @@
+{
+  "id": "conv_001",
+  "level_from": "L7",
+  "level_to": "L8",
+  "initial_prompt": "How do I check open ports on Linux?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How do I check open ports on Linux?",
+      "timestamp": "2025-12-25T18:06:25.924049",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**BLUF:** The modern standard is the `ss` command.\nRun the following with `sudo` to see which processes (PIDs) own the ports.\n\n```bash\nsudo ss -tulnp\n```\n\n### The Breakdown (Flags)\nThe combination `-tulnp` is a common mnemonic:\n*   **`-t`**: Show **T**CP ports.\n*   **`-u`**: Show **U**DP ports.\n*   **`-l`**: Show only **L**istening ports (omit established connections).\n*   **`-n`**: **N**umeric (don't try to resolve IPs to hostnames or ports to service names; makes it faster).\n*   **`-p`**: Show the **P**rocess/PID (requires `sudo`).\n\n---\n\n### Alternative Methods\n\n#### 1. The Legacy Way (`netstat`)\nIf `ss` is unavailable (common on very old systems), use `netstat`. The flags are identical.\n```bash\nsudo netstat -tulnp\n```\n\n#### 2. The File Handle Way (`lsof`)\nUseful if you want to search for a specific port easily using grep.\n```bash\n# Syntax: lsof -i :<port>\nsudo lsof -i :80\n\n# List all listening ports without resolving names\nsudo lsof -i -P -n | grep LISTEN\n```\n\n#### 3. The External Check (`nmap`)\nIf you need to see what ports are open from the **outside** (firewall perspective), run this from a *different* machine:\n```bash\nnmap -p- <target_ip_address>\n```\n\n### Troubleshooting Note\nIf you see a port open in `ss` but cannot connect from another machine, check your firewall status:\n```bash\n# Ubuntu/Debian (UFW)\nsudo ufw status\n\n# CentOS/RHEL (Firewalld)\nsudo firewall-cmd --list-all\n```",
+      "timestamp": "2025-12-25T18:06:25.924049",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 671,
+    "output_tokens": 425,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001342,
+    "output_cost": 0.0050999999999999995,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.006442
+  },
+  "created_at": "2025-12-25T18:06:15.681362",
+  "metadata": {
+    "context": ""
+  }
+}

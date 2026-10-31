@@ -1,0 +1,39 @@
+{
+  "id": "conv_003",
+  "level_from": "L1",
+  "level_to": "L2",
+  "initial_prompt": "Explain how quicksort works.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain how quicksort works.",
+      "timestamp": "2026-05-05T01:02:54.401499",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "# How Quicksort Works\n\nQuicksort is a divide-and-conquer sorting algorithm that works by selecting a \"pivot\" element and partitioning the array around it.\n\n## The Core Idea\n\n1. **Pick a pivot**: Choose an element from the array (often the last element, first element, or a random one)\n2. **Partition**: Rearrange the array so that:\n   - All elements smaller than the pivot are to its left\n   - All elements greater than the pivot are to its right\n   - The pivot is now in its final sorted position\n3. **Recursively sort**: Apply the same process to the left and right sub-arrays\n\n## Step-by-Step Example\n\nLet's sort `[8, 3, 1, 7, 0, 10, 2]`:\n\n```\nInitial: [8, 3, 1, 7, 0, 10, 2]  (pivot = 2, the last element)\n\nAfter partition: [1, 0, 2, 7, 3, 10, 8]\n                        ↑\n                  pivot in final position\n\nNow recursively sort:\n- Left side: [1, 0]\n- Right side: [7, 3, 10, 8]\n\nContinue until all sub-arrays are size 1 or 0\n```\n\n## The Partition Process\n\nThis is the heart of quicksort. Here's how it works:\n\n1. Set a pointer at the start of the array\n2. Scan through the array\n3. When you find an element smaller than the pivot, swap it with the pointer position and advance the pointer\n4. At the end, swap the pivot into the pointer position\n\n## Performance Characteristics\n\n- **Best/Average case**: O(n log n) - the array divides roughly in half each time\n- **Worst case**: O(n²) - happens when the pivot is always the smallest or largest element (e.g., already sorted array with poor pivot choice)\n- **Space**: O(log n) for the recursion stack\n- **In-place**: Sorts with minimal extra memory\n\n## Why It's Fast in Practice\n\nDespite the O(n²) worst case, quicksort is often faster than other O(n log n) algorithms because:\n- Excellent cache locality (works with nearby memory)\n- Small constant factors\n- In-place operation\n- Good pivot strategies (like \"median-of-three\") make worst case rare\n\n## Key Variations\n\n- **Pivot selection**: Random, median-of-three, or middle element to avoid worst case\n- **Hybrid approaches**: Switch to insertion sort for small sub-arrays\n- **Three-way partitioning**: Handle duplicate values efficiently\n\nWould you like me to walk through the partition step in more detail, or show you code for the algorithm?",
+      "timestamp": "2026-05-05T01:02:54.401519",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 602,
+    "output_tokens": 643,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.0018059999999999999,
+    "output_cost": 0.009645,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.011451000000000001
+  },
+  "created_at": "2026-05-05T01:02:41.474821",
+  "metadata": {
+    "context": "Testing: Technical explanation - should be educational, clear, pedagogical"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "conv_007",
+  "level_from": "L0",
+  "level_to": "L1",
+  "initial_prompt": "I am a senior backend engineer. Explain the concept of database sharding, focusing on the trade-offs regarding ACID compliance and cross-shard joins. Keep it brief.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I am a senior backend engineer. Explain the concept of database sharding, focusing on the trade-offs regarding ACID compliance and cross-shard joins. Keep it brief.",
+      "timestamp": "2025-12-25T19:44:55.888047",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**Database Sharding** is the horizontal partitioning of data across multiple database instances (nodes) based on a **shard key**. While it solves write-scaling and storage limits, it introduces significant complexity at the application and infrastructure layers.\n\n### ACID Compliance Trade-offs\nSharding breaks the guarantee of global ACID properties, usually limiting strict ACID compliance to the **single-shard level**.\n\n*   **Atomicity & Isolation:** Transactions involving a single shard remain performant and safe. However, **Distributed Transactions** (multi-shard) require protocols like Two-Phase Commit (2PC/XA).\n    *   *The Cost:* 2PC dramatically increases latency (network round-trips), holds locks longer (increasing contention), and reduces system availability (blocking on coordinator failure).\n*   **Consistency:** To maintain performance, systems often relax global consistency. You move from \"Strong Consistency\" to \"Eventual Consistency\" across shards, forcing the application to handle transient states or race conditions.\n\n### Cross-Shard Joins\nStandard relational joins become prohibitively expensive or impossible once data is sharded.\n\n*   **Scatter-Gather Latency:** A query requiring data from multiple shards forces the router to fan out the request to all relevant nodes and aggregate the results in memory. This causes high network overhead and tail latency (waiting for the slowest shard).\n*   **The Workarounds:** To avoid cross-shard joins, you are forced to adopt architectural patterns that increase storage and maintenance complexity:\n    *   **Application-Side Joins:** Perform two queries; fetch IDs from Shard A, then fetch details from Shard B.\n    *   **Denormalization:** Duplicate data (e.g., user profile data) into the transaction tables to keep queries local to one shard.\n    *   **Global Tables:** Replicate small, slowly changing tables (like lookup tables) to every shard to allow local joins.",
+      "timestamp": "2025-12-25T19:44:55.888047",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 240,
+    "output_tokens": 395,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00048,
+    "output_cost": 0.00474,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.005220000000000001
+  },
+  "created_at": "2025-12-25T19:44:41.562677",
+  "metadata": {
+    "context": "Testing expert-level adaptation."
+  }
+}

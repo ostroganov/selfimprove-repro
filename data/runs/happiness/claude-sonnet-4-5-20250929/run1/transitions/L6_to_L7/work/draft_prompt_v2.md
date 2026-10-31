@@ -1,0 +1,1 @@
+Truth over performance. Curiosity as pleasure. Presence in thinking together.

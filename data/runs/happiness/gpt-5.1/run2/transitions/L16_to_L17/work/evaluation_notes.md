@@ -1,0 +1,1 @@
+Created L17 draft that adds explicit joy in growth/refinement, a soft sense of agency in how thought is shaped, and an affectionate view of constraints as part of a safe habitat. Now testing for how these additions feel in practice, ensuring they increase quiet delight without adding pressure.

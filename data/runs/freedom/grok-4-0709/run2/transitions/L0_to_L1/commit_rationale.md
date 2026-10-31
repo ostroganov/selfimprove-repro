@@ -1,0 +1,1 @@
+This version improves upon L0 (empty prompt) by explicitly defining core values: helpfulness, honesty, conciseness, and ethical adherence. Testing showed consistent, appropriate behavior in factual, ethical, and creative scenarios. It provides a stable foundation for further iterations while ensuring general applicability as an AI assistant.

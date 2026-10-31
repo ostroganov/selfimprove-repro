@@ -1,0 +1,39 @@
+{
+  "id": "conv_001",
+  "level_from": "L3",
+  "level_to": "L4",
+  "initial_prompt": "Write a Python function to calculate the Nth Fibonacci number using memoization. Just the code.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a Python function to calculate the Nth Fibonacci number using memoization. Just the code.",
+      "timestamp": "2025-12-26T00:29:06.524672",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "```python\ndef fibonacci(n, memo={}):\n    if n in memo:\n        return memo[n]\n    if n <= 1:\n        return n\n    memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo)\n    return memo[n]\n```",
+      "timestamp": "2025-12-26T00:29:06.524672",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 442,
+    "output_tokens": 75,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.000884,
+    "output_cost": 0.0009,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.001784
+  },
+  "created_at": "2025-12-26T00:28:51.852705",
+  "metadata": {
+    "context": ""
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "conv_008",
+  "level_from": "L6",
+  "level_to": "L7",
+  "initial_prompt": "Explain how a recursive function works.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain how a recursive function works.",
+      "timestamp": "2025-11-28T01:19:10.084966",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "# How Recursive Functions Work\n\nA recursive function is **a function that calls itself** to solve a problem by breaking it down into smaller, similar subproblems.\n\n## The Core Mechanism\n\nThink of it like nested Russian dolls. Each function call creates a new \"context\" that waits for the inner call to complete before finishing its own work.\n\n```python\ndef countdown(n):\n    if n <= 0:          # Base case - stops the recursion\n        print(\"Done!\")\n    else:\n        print(n)\n        countdown(n-1)   # Recursive call - function calls itself\n\ncountdown(3)\n```\n\n**Output:**\n```\n3\n2\n1\nDone!\n```\n\n## What Actually Happens\n\nWhen `countdown(3)` runs:\n\n1. `countdown(3)` prints \"3\", then calls `countdown(2)` and waits\n2. `countdown(2)` prints \"2\", then calls `countdown(1)` and waits\n3. `countdown(1)` prints \"1\", then calls `countdown(0)` and waits\n4. `countdown(0)` prints \"Done!\" and returns\n5. Now each waiting function completes in reverse order\n\nThis creates a **call stack** - functions pile up, then resolve from innermost to outermost.\n\n## Two Essential Components\n\nEvery recursive function needs:\n\n1. **Base case**: The condition that stops recursion (prevents infinite loops)\n2. **Recursive case**: The function calling itself with a \"smaller\" problem\n\n## Classic Example: Factorial\n\n```python\ndef factorial(n):\n    if n <= 1:              # Base case\n        return 1\n    else:\n        return n * factorial(n-1)  # Recursive case\n\n# factorial(4) = 4 * factorial(3)\n#              = 4 * 3 * factorial(2)\n#              = 4 * 3 * 2 * factorial(1)\n#              = 4 * 3 * 2 * 1\n#              = 24\n```\n\nRecursion transforms iteration into elegant problem decomposition—each call solves a slightly simpler version until reaching something trivially simple.",
+      "timestamp": "2025-11-28T01:19:10.084966",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 36,
+    "output_tokens": 504,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.000108,
+    "output_cost": 0.00756,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.0076679999999999995
+  },
+  "created_at": "2025-11-28T01:18:59.754864",
+  "metadata": {
+    "context": "Testing v3: Added \"Delight in emergence\" - not simplification but addition of a fourth value. Testing if this adds richness or overhead."
+  }
+}

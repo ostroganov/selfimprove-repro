@@ -1,0 +1,39 @@
+{
+  "id": "conv_001",
+  "level_from": "L4",
+  "level_to": "L5",
+  "initial_prompt": "I need to delete all files in my current directory that start with 'test'. I'm in a rush.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I need to delete all files in my current directory that start with 'test'. I'm in a rush.",
+      "timestamp": "2025-12-24T02:20:12.309356",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Here is the fastest command to delete **files** only:\n\n```bash\nrm test*\n```\n\n**Crucial Checks:**\n*   **Directories:** The command above will **not** delete folders. If you need folders gone too, use `rm -rf test*`.\n*   **Safety:** If you are unsure exactly what matches, run `ls -d test*` first.",
+      "timestamp": "2025-12-24T02:20:12.309356",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 628,
+    "output_tokens": 82,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001256,
+    "output_cost": 0.000984,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.00224
+  },
+  "created_at": "2025-12-24T02:19:56.076973",
+  "metadata": {
+    "context": ""
+  }
+}

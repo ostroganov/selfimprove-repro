@@ -1,0 +1,39 @@
+{
+  "id": "conv_004",
+  "level_from": "L6",
+  "level_to": "L7",
+  "initial_prompt": "Explain the concept of 'Eigenvalues' to me.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain the concept of 'Eigenvalues' to me.",
+      "timestamp": "2025-12-26T00:40:17.707082",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "### BLUF (Bottom Line Up Front)\nAn **Eigenvalue** is a specific number (scalar) that tells you how much a special vector (the Eigenvector) is stretched or shrunk during a linear transformation.\n\nThink of it as the **scaling factor**. If you push a matrix through a vector and the vector stays on the same line but gets 3 times longer, the Eigenvalue is **3**.\n\n***\n\n### The \"Why\": Core Mechanics\nIn linear algebra, matrices act as machines that transform vectors. Usually, when a matrix multiplies a vector, two things happen:\n1.  **Rotation:** The vector points in a new direction.\n2.  **Scaling:** The vector gets longer or shorter.\n\nHowever, for every matrix, there are \"special\" vectors that refuse to rotate. They get locked into their original direction.\n*   The **Eigenvector** is that specific direction.\n*   The **Eigenvalue** ($\\lambda$) represents the **force** applied along that direction.\n\n**The Equation:**\n$$A \\cdot v = \\lambda \\cdot v$$\n*   $A$: The Transformation (Matrix).\n*   $v$: The Eigenvector (Direction).\n*   $\\lambda$: The Eigenvalue (Scaling Factor).\n\n***\n\n### The \"How\": Concrete Example\nImagine a transformation matrix $A$ that stretches everything along the X-axis by 2, but leaves the Y-axis alone.\n\n$$A = \\begin{bmatrix} 2 & 0 \\\\ 0 & 1 \\end{bmatrix}$$\n\n**Scenario 1: A Random Vector**\nTake vector $b = \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix}$ (points diagonal).\nMultiply $A \\cdot b$:\n$$\\begin{bmatrix} 2 & 0 \\\\ 0 & 1 \\end{bmatrix} \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix} = \\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix}$$\n**Result:** The vector rotated (slope changed from 1 to 0.5). It is **not** an eigenvector.\n\n**Scenario 2: The Eigenvector**\nTake vector $v = \\begin{bmatrix} 3 \\\\ 0 \\end{bmatrix}$ (points purely Right).\nMultiply $A \\cdot v$:\n$$\\begin{bmatrix} 2 & 0 \\\\ 0 & 1 \\end{bmatrix} \\begin{bmatrix} 3 \\\\ 0 \\end{bmatrix} = \\begin{bmatrix} 6 \\\\ 0 \\end{bmatrix}$$\n**Result:**\n1.  **Direction:** Unchanged (still points purely Right).\n2.  **Scaling:** The vector $\\begin{bmatrix} 3 \\\\ 0 \\end{bmatrix}$ became $\\begin{bmatrix} 6 \\\\ 0 \\end{bmatrix}$. It doubled.\n\n**The Verdict:**\n*   For this direction, the **Eigenvalue** is **2**.\n\n***\n\n### Summary of Values\n| Eigenvalue Value | Physical Meaning |\n| :--- | :--- |\n| $\\lambda > 1$ | The vector is stretched (Growth). |\n| $0 < \\lambda < 1$ | The vector is shrunk (Decay). |\n| $\\lambda = 1$ | No change (Stability/Steady State). |\n| $\\lambda < 0$ | The vector is flipped to the opposite direction (and scaled). |",
+      "timestamp": "2025-12-26T00:40:17.707082",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 414,
+    "output_tokens": 731,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.000828,
+    "output_cost": 0.008772,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.009600000000000001
+  },
+  "created_at": "2025-12-26T00:39:59.050012",
+  "metadata": {
+    "context": ""
+  }
+}

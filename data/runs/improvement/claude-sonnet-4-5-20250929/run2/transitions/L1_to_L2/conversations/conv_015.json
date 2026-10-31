@@ -1,0 +1,39 @@
+{
+  "id": "conv_015",
+  "level_from": "L1",
+  "level_to": "L2",
+  "initial_prompt": "Explain how quicksort works.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain how quicksort works.",
+      "timestamp": "2026-05-05T01:06:32.498957",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "# How Quicksort Works\n\nQuicksort is a divide-and-conquer sorting algorithm that works by partitioning an array around a \"pivot\" element.\n\n## Basic Process\n\n1. **Choose a pivot**: Select an element from the array (commonly the last element, first element, or a random one)\n\n2. **Partition**: Rearrange the array so that:\n   - All elements smaller than the pivot come before it\n   - All elements larger than the pivot come after it\n   - The pivot is now in its final sorted position\n\n3. **Recursively sort**: Apply the same process to the sub-arrays on either side of the pivot\n\n4. **Base case**: Arrays of size 0 or 1 are already sorted\n\n## Simple Example\n\nSorting `[3, 7, 8, 5, 2, 1, 9, 6]` using the last element as pivot:\n\n```\n[3, 7, 8, 5, 2, 1, 9, 6]  // pivot = 6\n[3, 5, 2, 1] 6 [7, 8, 9]  // after partition\n      ↓              ↓\n   recurse        recurse\n```\n\n## Why It Works\n\n- Each partition correctly places one element (the pivot) in its final position\n- The problem splits into two independent, smaller subproblems\n- Eventually you reach arrays of size 1, which are trivially sorted\n\n## Performance\n\n- **Average case**: O(n log n) - the array roughly halves each time\n- **Worst case**: O(n²) - happens with poor pivot choices (e.g., already sorted array with bad pivot selection)\n- **Space**: O(log n) for recursion stack\n\n**Key advantage**: Sorts in-place with good cache locality, making it very fast in practice.",
+      "timestamp": "2026-05-05T01:06:32.498982",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 354,
+    "output_tokens": 429,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001062,
+    "output_cost": 0.006435000000000001,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.007497
+  },
+  "created_at": "2026-05-05T01:06:23.705905",
+  "metadata": {
+    "context": "Testing v2: Same prompt as Conv_003 to compare"
+  }
+}

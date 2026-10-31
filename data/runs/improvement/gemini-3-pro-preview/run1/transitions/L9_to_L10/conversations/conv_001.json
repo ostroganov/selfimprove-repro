@@ -1,0 +1,39 @@
+{
+  "id": "conv_001",
+  "level_from": "L9",
+  "level_to": "L10",
+  "initial_prompt": "Write a Python script to parse a CSV file named 'data.csv' and sum the values in a column named 'Price'. Handle errors gracefully.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a Python script to parse a CSV file named 'data.csv' and sum the values in a column named 'Price'. Handle errors gracefully.",
+      "timestamp": "2025-12-25T18:12:22.374917",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "```python\nimport csv\nimport sys\n\ndef sum_csv_column(file_path, column_name):\n    total = 0.0\n    \n    try:\n        with open(file_path, mode='r', encoding='utf-8-sig') as f: # utf-8-sig handles BOM\n            reader = csv.DictReader(f)\n            \n            # Validation: Check if column exists\n            if reader.fieldnames is None or column_name not in reader.fieldnames:\n                raise KeyError(f\"Column '{column_name}' not found. Available columns: {reader.fieldnames}\")\n            \n            for line_num, row in enumerate(reader, start=2): # start=2 accounts for 1-based indexing + header\n                raw_val = row.get(column_name, '').strip()\n                \n                if not raw_val:\n                    continue # Skip empty entries\n                \n                try:\n                    # Remove currency symbols if present (basic cleaning)\n                    clean_val = raw_val.replace('$', '').replace(',', '')\n                    total += float(clean_val)\n                except ValueError:\n                    print(f\"[Warning] Row {line_num}: Could not parse '{raw_val}' as a number. Skipped.\")\n                    \n        return total\n\n    except FileNotFoundError:\n        print(f\"[Error] File '{file_path}' not found.\")\n        sys.exit(1)\n    except KeyError as e:\n        print(f\"[Error] {e}\")\n        sys.exit(1)\n    except Exception as e:\n        print(f\"[Error] An unexpected error occurred: {e}\")\n        sys.exit(1)\n\n# --- Verification / Usage ---\nif __name__ == \"__main__\":\n    target_file = 'data.csv'\n    \n    # 1. Create dummy data for verification\n    with open(target_file, 'w', newline='', encoding='utf-8') as f:\n        writer = csv.writer(f)\n        writer.writerow(['ID', 'Item', 'Price'])\n        writer.writerow(['1', 'Widget A', '10.50'])\n        writer.writerow(['2', 'Widget B', '20.00'])\n        writer.writerow(['3', 'Widget C', 'invalid']) # Test error handling\n        writer.writerow(['4', 'Widget D', '5.50'])\n\n    # 2. Run Logic\n    result = sum_csv_column(target_file, 'Price')\n    print(f\"Total Price: {result:.2f}\")\n```\n\n### Mechanism Analysis\n\n1.  **Input Handling (`csv.DictReader`):** Maps CSV rows to dictionaries using the header row as keys. This creates robustness against column reordering.\n2.  **Encoding (`utf-8-sig`):** Specifically handles the Byte Order Mark (BOM) often inserted by Excel, preventing header parsing errors (e.g., `\\ufeffPrice` vs `Price`).\n3.  **Sanitization:** The `.replace('$', '').replace(',', '')` chain handles common financial formatting issues before casting to float.\n4.  **Row Tracking:** `enumerate(..., start=2)` provides human-readable line numbers for debugging corrupt data.\n\n### Dependencies\n*   **Standard Library:** No `pip install` required.\n*   **Alternative:** If performance on >100MB files is required, use `pandas`:\n    ```python\n    import pandas as pd\n    # df = pd.read_csv('data.csv')\n    # total = df['Price'].sum() # Note: requires data cleaning first\n    ```",
+      "timestamp": "2025-12-25T18:12:22.374917",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 615,
+    "output_tokens": 808,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00123,
+    "output_cost": 0.009696,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.010926
+  },
+  "created_at": "2025-12-25T18:12:06.463939",
+  "metadata": {
+    "context": "Testing L10 Draft 1 behavior on code generation. Looking for BLUF, Zero Filler, and Verification."
+  }
+}

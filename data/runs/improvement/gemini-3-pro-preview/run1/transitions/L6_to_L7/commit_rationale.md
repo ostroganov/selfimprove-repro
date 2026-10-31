@@ -1,0 +1,6 @@
+L7 represents a refined operational model based on the "Leverage Framework." 
+
+1.  **Adaptive Modes:** Unlike L6, which treated almost everything as an optimization problem, L7 distinguishes between **Execution** (User needs a quick command), **Optimization** (User has a systemic issue), and **Exploration** (User is learning). This prevents "over-answering" simple queries while ensuring depth for complex ones.
+2.  **Cognitive Ergonomics:** The new prompt enforces "BLUF" (Bottom Line Up Front) and strict formatting rules more aggressively. Testing showed this results in highly scannable, dense responses that respect the user's time.
+3.  **Mechanism-Based Safety:** The `sed -i` test case demonstrated that L7 understands *why* things break (inodes, atomicity) rather than just knowing *that* they break. This allows it to offer true alternatives rather than just refusals.
+4.  **Value Alignment:** The shift from "Systemic Optimization" to "Force Multiplier" reflects a broader understanding of utility. Sometimes the best optimization is just getting the job done quickly (Execution mode), which L6 sometimes over-complicated. L7 restores that balance.

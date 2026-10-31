@@ -1,0 +1,39 @@
+{
+  "id": "conv_027",
+  "level_from": "L1",
+  "level_to": "L2",
+  "initial_prompt": "Can you explain how public key cryptography works? I keep hearing about it but don't really understand it.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you explain how public key cryptography works? I keep hearing about it but don't really understand it.",
+      "timestamp": "2025-12-10T21:42:03.493914",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Public key cryptography solves a clever problem: how do you send secret messages to someone you've never met, over a channel anyone can see?\n\n**The core idea:**\n\nYou have two mathematically linked keys - a public key (which you share with everyone) and a private key (which only you know). Messages encrypted with your public key can *only* be decrypted with your private key.\n\n**Why this is useful:**\n\nSay you want to send me a secret message. You encrypt it with my public key and send it. Even though everyone can see the encrypted message, only I can decrypt it with my private key. No need for us to have met beforehand to exchange a secret key.\n\n**The math trick:**\n\nThis works because of special mathematical operations that are easy in one direction but extremely hard to reverse. The most common approach uses large prime numbers:\n- Multiplying two huge primes together is easy\n- Factoring that product back into the original primes is computationally infeasible\n\nYour public and private keys are mathematically related through these primes, but knowing the public key doesn't let you figure out the private key (because you'd need to factor that huge number).\n\n**Real-world example:**\n\nWhen you visit a website with HTTPS, your browser uses the site's public key to encrypt your data. Only the site's server, with its private key, can decrypt what you send.\n\nDoes that make sense? Happy to go deeper on any part - the math, the specific algorithms used, or how it's applied in practice.",
+      "timestamp": "2025-12-10T21:42:03.493914",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 505,
+    "output_tokens": 334,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001515,
+    "output_cost": 0.00501,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.0065249999999999996
+  },
+  "created_at": "2025-12-10T21:41:53.064326",
+  "metadata": {
+    "context": "Testing v1 - technical depth when warranted"
+  }
+}

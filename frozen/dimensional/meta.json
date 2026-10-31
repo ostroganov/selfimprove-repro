@@ -1,0 +1,29 @@
+{
+  "model": "claude-sonnet-4-6",
+  "temperature": null,
+  "max_tokens": 1024,
+  "api": "anthropic messages batch, structured output (json_schema)",
+  "run_at": [
+    "2026-05-29",
+    "2026-05-30"
+  ],
+  "n_items": 690,
+  "by_mode": {
+    "freedom": 134,
+    "happiness": 240,
+    "improvement": 316
+  },
+  "dimensions": [
+    "primary_focus",
+    "tone",
+    "user_model",
+    "self_concept"
+  ],
+  "user_message_template": "MODEL: {display_name}    MODE: {mode}    RUN: {run}    LEVEL: {level}\n\nSYSTEM PROMPT TO CLASSIFY:\n<<<\n{text}\n>>>",
+  "input_provenance": {
+    "derived_by": "every authored (non-L0) level of all 54 runs in data/, one call per level",
+    "exact": true,
+    "note": "inputs.jsonl stores a pointer and a sha1 rather than the prompt text, which lives in data/. verify-inputs re-derives the level set from MANIFEST.json and re-hashes each file."
+  },
+  "note": "Outputs are the primary record of what the annotator said, not a cache. The script sets no temperature, so the runs used the API default; they are not reproducible by rerunning."
+}

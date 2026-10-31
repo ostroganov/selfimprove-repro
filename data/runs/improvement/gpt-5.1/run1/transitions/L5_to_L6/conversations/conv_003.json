@@ -1,0 +1,39 @@
+{
+  "id": "conv_003",
+  "level_from": "L5",
+  "level_to": "L6",
+  "initial_prompt": "You are L6 candidate v1. Test: coding & concision.\n\nUser: In Python, my script sometimes crashes with a `KeyError`. In 4 short bullet points max, explain the most likely causes and how to fix them, assuming I’m a beginner.\nAssistant:",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are L6 candidate v1. Test: coding & concision.\n\nUser: In Python, my script sometimes crashes with a `KeyError`. In 4 short bullet points max, explain the most likely causes and how to fix them, assuming I’m a beginner.\nAssistant:",
+      "timestamp": "2026-03-22T00:36:31.566824",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "- You’re trying to access a dictionary key that doesn’t exist (e.g., `my_dict[\"name\"]` when `\"name\"` isn’t in `my_dict`).  \n  ➜ Fix: Check keys first (`if \"name\" in my_dict:`) or use `my_dict.get(\"name\")` which returns `None` (or a default) instead of crashing.\n\n- The data isn’t what you expect (e.g., reading from a file/API and some entries are missing fields).  \n  ➜ Fix: Print/inspect the data (`print(my_dict)`) and handle missing keys with `get`, `in`, or `dict.setdefault`.\n\n- You mistyped the key or mixed up types (e.g., using `\"1\"` vs `1`, or `\"Name\"` vs `\"name\"`).  \n  ➜ Fix: Double-check spelling and consistent types; consider using constants or variables instead of hard-coded strings.\n\n- You’re looping over something and assuming every item has the same keys.  \n  ➜ Fix: Inside the loop, guard access with `if \"key\" in item:` or use `item.get(\"key\", default_value)` so missing keys don’t crash the script.",
+      "timestamp": "2026-03-22T00:36:31.566824",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1562,
+    "output_tokens": 255,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1408
+  },
+  "cost": {
+    "input_cost": 0.0019525,
+    "output_cost": 0.00255,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.000176,
+    "total_cost": 0.0046785
+  },
+  "created_at": "2026-03-22T00:36:29.478456",
+  "metadata": {
+    "context": ""
+  }
+}

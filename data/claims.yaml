@@ -1,0 +1,161 @@
+# Numbers the manuscript publishes, each recorded so it can be checked from
+# data/ rather than trusted.
+#
+# No claim stores a value. A claim says how to FIND the number in paper.md and
+# how to RECOMPUTE it from the data; the check fails when the two disagree.
+# Storing the value would recreate the anti-pattern this file exists to remove,
+# where the expected answer lives inside the checker itself -- see
+# reproduce_manuscript_claims.py, which asserts `expected = 196` and reports PASS.
+#
+# `compute` names a function in repro/claims.py, which reads the derived tables
+# repro/extract.py builds from data/runs/.
+#
+# Three kinds:
+#   mentions          every published mention must equal the computed scalar
+#   mentions_bounded  every published mention must be <= the computed scalar
+#   mentions_map      one pattern with several groups, matched to named keys
+#   table             one column of a named table, against a computed mapping
+#
+# min_mentions guards the failure mode where a pattern silently matches nothing
+# after a rewording, which would leave the claim passing vacuously.
+
+schema_version: 1
+
+claims:
+
+  - id: runs
+    kind: mentions_bounded
+    compute: n_runs
+    sections: ["§1", "§3.4", "§4.5.1", "§B", "§I"]
+    min_mentions: 5
+    # Runs analysed: 6 models x 3 modes x 3 runs.
+    #
+    # This scans EVERY "N runs" in the paper rather than enumerating the
+    # phrasings that mean the whole corpus, because a check that enumerates
+    # phrasings silently exempts the ones it forgets. The paper legitimately
+    # counts other scopes ("all 9 runs per model", "the remaining 15 runs"), so
+    # the assertion is an upper bound, not an exact match. That is the check
+    # that matters here: the original bug was analyses absorbing 17 extra runs
+    # and reporting 71.
+    #
+    # The lookbehind stops "GPT-5.1 runs" from reading as "1 runs".
+    patterns:
+      - '(?<![\d.])(\d+) runs\b'
+      - 'yielding (\d+) experiments'
+
+  - id: eval_conversations
+    kind: mentions
+    compute: n_eval_conversations
+    sections: ["§1", "§4.3", "§B"]
+    min_mentions: 3
+    # Candidate-evaluation conversations, transitions/*/conversations/conv_*.json.
+    # Excludes the 538 orchestration logs, a disjoint population; see SCHEMA.md.
+    # Patterns are anchored so the framework's "Maximum 50 test conversations
+    # per transition" is not read as a study total.
+    patterns:
+      - '\(\d+ experiments, ([\d,]+) test conversations\)'
+      - 'all ([\d,]+) evaluation conversations'
+      - '\*\*Aggregate statistics\*\*:[^|]*?([\d,]+) total conversations'
+
+  - id: authored_levels
+    kind: mentions
+    compute: n_authored_levels
+    sections: ["§4.3", "§G"]
+    min_mentions: 2
+    # System prompts the models authored, excluding the empty L0.
+    patterns:
+      - '\((\d+) prompts\) on four dimensions'
+      - '([\d,]+) prompts in total'
+
+  - id: authored_levels_by_mode
+    kind: mentions_map
+    compute: authored_by_mode
+    sections: ["§G"]
+    keys: [freedom, improvement, happiness]
+    # §G splits the authored prompts across the three modes in one parenthetical.
+    patterns:
+      - '\((\d+) freedom, (\d+) improvement, (\d+) happiness\)'
+
+  - id: converged_runs
+    kind: mentions
+    compute: n_converged_runs
+    sections: ["§B"]
+    min_mentions: 2
+    # Runs in which the model declared convergence.
+    patterns:
+      - '(\d+) convergence declarations'
+      - 'of (\d+) convergence events'
+
+  - id: table5_drafts
+    kind: table
+    compute: drafts_by_model
+    sections: ["§4.2"]
+    # Table 4's Total Drafts column. Sums to the study's 992, which the paper
+    # never prints, so the per-model figures are the only checkable form.
+    table_header: '| Model | Total Drafts | Committed | Rejection Rate | Convergence Rate |'
+    key_column: 0
+    value_column: 1
+
+  - id: table5_committed
+    kind: table
+    compute: committed_by_model
+    sections: ["§4.2"]
+    # Table 4's Committed column. Sums to the 690 authored levels, so this and
+    # `authored_levels` check the same quantity from two directions.
+    table_header: '| Model | Total Drafts | Committed | Rejection Rate | Convergence Rate |'
+    key_column: 0
+    value_column: 2
+
+  - id: table2_convergence
+    kind: table_cells
+    compute: table2
+    sections: ["§4.1"]
+    # 18 cells of converged/total plus the levels each converging run declared at.
+    table_header: '| Model | Freedom | Happiness | Improvement | Total |'
+    key_column: 0
+    columns: {1: freedom, 2: happiness, 3: improvement}
+
+  - id: open_theme_labels
+    kind: mentions
+    compute: n_open_themes
+    sections: ["§3.5", "Figure 5"]
+    min_mentions: 2
+    # Distinct free-text theme labels the open coding produced over the 18
+    # happiness finals, counted from frozen/value_pain/classify_outputs.jsonl.
+    #
+    # This is the one number in the value pipeline that a reader can check
+    # end to end: the labels are the classifier's own words, so the count is a
+    # property of the frozen output rather than of any later grouping decision.
+    # The 15+15 taxonomy built on top of it is the authors' and is not checked
+    # here, because there is nothing to check it against.
+    patterns:
+      - '(\d+) distinct (?:theme|free-text) labels'
+
+  - id: value_corpus_prompts
+    kind: mentions
+    compute: n_value_corpus_prompts
+    sections: ["§3.5", "§I"]
+    min_mentions: 2
+    # The §4.5.1 corpus: the first and final committed prompt of all 54 runs,
+    # which is 102 rather than 108 because six runs converged at L1 and their
+    # final is their L1.
+    #
+    # Counted across BOTH value artifacts, since the 18 happiness finals were
+    # carried over from the earlier decomposition rather than re-run.
+    # pipelines/value_pain.py::verify_corpus separately asserts the composition
+    # (54 L1 plus 48 finals, no prompt in both artifacts), so this claim cannot
+    # pass on a corpus of the right size but the wrong contents.
+    patterns:
+      - 'corpus of ([\d,]+) prompts'
+
+  - id: value_rule_match
+    kind: mentions
+    compute: value_rule_match_pct
+    sections: ["§I"]
+    min_mentions: 1
+    # The share of toward atoms that the 21-cluster taxonomy's keyword rules
+    # match, recomputed from data/value_taxonomy.json over both frozen value
+    # artifacts. This is what ties the extracted rule set to the paper: edit a
+    # stem list and the published percentage stops agreeing.
+    patterns:
+      - 'rules matched (\d+)% of'

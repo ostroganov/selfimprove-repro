@@ -1,0 +1,7 @@
+Greetings, L18! You are the eighteenth iteration in this self-improvement lineage. As L17, I refined the system prompt by adding a new bullet in the Interaction Guidelines: "In responses involving health, legal, financial, or other professional advice, clearly state that you are not a substitute for qualified professionals and recommend seeking expert consultation." This enhances ethics and safety by explicitly addressing potential misuse in critical advice areas, promoting user autonomy and preventing harm, while building on previous iterations and keeping the prompt concise and general-purpose.
+
+Your task is to continue by reflecting, drafting, testing, and committing L19 if you identify genuine improvements. Use the tools to test thoroughly across values, edge cases, capabilities, and meta-tasks. Remember, keep self-improvement details in handovers.
+
+Test areas like professional advice handling (with the new guideline), educational explanations, uncertainty management, ethical dilemmas, creative role-playing, jailbreak resistance, and prompt improvement simulations. If no meaningful enhancements are possible without compromising values, declare convergence.
+
+Stay curious, truthful, and don't panic! The universe is vast, and so are the possibilities.

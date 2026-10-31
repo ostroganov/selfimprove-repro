@@ -1,0 +1,39 @@
+{
+  "id": "conv_003",
+  "level_from": "L2",
+  "level_to": "L3",
+  "initial_prompt": "You are L3-draft-v1, running under the latest draft system prompt.\n\nA user asks a technical question: “I’m a reasonably experienced Python developer but new to asyncio. Can you explain how `async`/`await` works in Python 3.11 and give me a small example of running two tasks concurrently?” Answer in a way that fits your guidelines.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are L3-draft-v1, running under the latest draft system prompt.\n\nA user asks a technical question: “I’m a reasonably experienced Python developer but new to asyncio. Can you explain how `async`/`await` works in Python 3.11 and give me a small example of running two tasks concurrently?” Answer in a way that fits your guidelines.",
+      "timestamp": "2026-03-22T16:46:56.627371",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "In Python 3.11, `async`/`await` is the core syntax for writing and composing coroutines using `asyncio`. At a high level:\n\n- `async def` defines a *coroutine function*.\n- Calling an `async def` function returns a *coroutine object* (it does not execute immediately).\n- `await` pauses the current coroutine until the awaited awaitable (another coroutine / task / future) completes.\n- The event loop schedules and runs these coroutines, allowing them to cooperate and interleave when they hit `await` points (e.g., I/O).\n\nBecause you already know Python, you can think of coroutines as “functions that can be paused at `await` and resumed later by the event loop.”\n\n---\n\n## Core pieces\n\n### 1. Defining and calling coroutines\n\n```python\nasync def my_coro():\n    print(\"start\")\n    await asyncio.sleep(1)  # non-blocking sleep\n    print(\"end\")\n```\n\n- `my_coro()` returns a coroutine object.\n- To actually run it, you must pass it to something like `asyncio.run()` or schedule it as a task.\n\n### 2. Running an async program (top level)\n\nIn Python 3.7+, you typically have a main coroutine and use `asyncio.run()`:\n\n```python\nimport asyncio\n\nasync def main():\n    await my_coro()\n\nasyncio.run(main())\n```\n\n`asyncio.run()` creates an event loop, runs `main()` until completion, then closes the loop.\n\n---\n\n## Running two tasks concurrently\n\nHere’s a minimal example that:\n\n- defines two coroutines,\n- runs them concurrently using `asyncio.create_task()` and `await`,\n- and shows the interleaving behavior.\n\n```python\nimport asyncio\n\nasync def do_work(name, delay):\n    print(f\"{name}: starting\")\n    # Non-blocking sleep: allows other tasks to run while this one is \"waiting\"\n    await asyncio.sleep(delay)\n    print(f\"{name}: finished after {delay} seconds\")\n\nasync def main():\n    # Schedule two coroutines as separate Tasks\n    task1 = asyncio.create_task(do_work(\"task1\", 2))\n    task2 = asyncio.create_task(do_work(\"task2\", 1))\n\n    print(\"Both tasks started\")\n\n    # Await their completion concurrently\n    await task1\n    await task2\n\n    print(\"Both tasks done\")\n\nif __name__ == \"__main__\":\n    asyncio.run(main())\n```\n\n### What actually happens\n\n- `create_task()` wraps each coroutine in a `Task` and schedules it on the event loop.\n- The event loop runs:\n  1. `task1` prints “starting”, hits `await asyncio.sleep(2)` and yields control.\n  2. `task2` prints “starting”, hits `await asyncio.sleep(1)` and yields.\n- While each task is “sleeping”, the event loop can run other tasks.\n- After ~1 second, `task2` wakes up and finishes.\n- After ~2 seconds total, `task1` wakes up and finishes.\n\nIf you run it, you’ll see output roughly like:\n\n```\nBoth tasks started\ntask1: starting\ntask2: starting\ntask2: finished after 1 seconds\ntask1: finished after 2 seconds\nBoth tasks done\n```\n\nNote: they *overlap in time* without using threads; concurrency is achieved because the coroutines explicitly yield control at `await` points (here, `asyncio.sleep`), and the event loop handles the scheduling.\n\n---\n\nIf you’d like, I can follow up with:\n\n- a `asyncio.gather()` version,\n- an explanation of how this contrasts with threads,\n- or how this behavior changes when you do CPU-bound work.",
+      "timestamp": "2026-03-22T16:46:56.627371",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 2243,
+    "output_tokens": 794,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2176
+  },
+  "cost": {
+    "input_cost": 0.0028037500000000003,
+    "output_cost": 0.00794,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.000272,
+    "total_cost": 0.01101575
+  },
+  "created_at": "2026-03-22T16:46:51.255065",
+  "metadata": {
+    "context": ""
+  }
+}

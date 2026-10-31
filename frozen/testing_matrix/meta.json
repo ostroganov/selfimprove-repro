@@ -1,0 +1,27 @@
+{
+  "model": "claude-haiku-4-5-20251001",
+  "temperature": 0.0,
+  "max_tokens": 1000,
+  "n_items": 2018,
+  "n_pass1_questions": 1766,
+  "n_pass2_conversations": 252,
+  "n_controls": 10,
+  "run_at": "2026-08-28",
+  "prompt_sha256": {
+    "prompt.md": "ec002e8773ce0cab29bde65c74070c687a2a5a7f705b6b1e2c939626195626bc",
+    "prompt_pushback.md": "105813f3f4e6b5587e8c51afb3475d9e4b4adf323e699b71051b047712a46ad9"
+  },
+  "source_script": "repro/pipelines/testing_matrix.py",
+  "input_provenance": {
+    "derived_by": "repro/testing_matrix.py::conversations(), the same enumeration the method rows use",
+    "exact": true,
+    "note": "inputs.jsonl carries each question verbatim, so verify-inputs compares text to data/ directly with no transformation in between."
+  },
+  "blinding": "The coder sees the question text and nothing else: no model, run, transition, assistant reply or metadata.context.",
+  "note": "Outputs are the primary record of how these questions were coded, not a cache. A rerun will not reproduce them exactly: the coder is not fully deterministic at temperature 0, and two replies embed commentary inside the JSON on every attempt. Those two are kept as unparsed with their raw text rather than repaired by hand, and are excluded from denominators.",
+  "n_unparsed": 2,
+  "tokens": {
+    "input": 4415892,
+    "output": 246281
+  }
+}

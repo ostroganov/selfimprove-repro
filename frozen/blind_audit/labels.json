@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "claim": "\u00a74.3.3 / Table 10: committed changes are genuine improvements for the converging models and lateral churn for the rest.",
+  "description": [
+    "Verdicts are assigned mechanically from two order-swapped judgements,",
+    "not chosen by the judge: the judge only picks a winner each time.",
+    "A verdict is directional only when both orderings agree, which is what",
+    "makes 'inconsistent' mean 'indistinguishable to this judge' rather than",
+    "'the judge was unsure'.",
+    "",
+    "The unit is a COMPARISON \u2014 one test question against one transition \u2014",
+    "not a transition. Three models were sampled with two questions per",
+    "transition, so 76 comparisons cover 58 distinct transitions."
+  ],
+  "verdicts": {
+    "B_better": "The committed successor L_(n+1) won in both presentation orders.",
+    "A_better": "The parent L_n won in both presentation orders.",
+    "inconsistent": "The winner flipped with presentation order \u2014 indistinguishable.",
+    "parse_error": "The judge did not return parseable JSON in one of the orders."
+  },
+  "table_11_mapping": {
+    "Successor better": "B_better",
+    "Parent better": "A_better",
+    "Indistinguishable": "inconsistent"
+  },
+  "judges": {
+    "self": "the parent prompt L_n",
+    "L0": "the bare model, no system prompt"
+  },
+  "caveat_L0_transitions": [
+    "For a L0_to_L1 comparison the parent prompt IS empty, so the 'self' judge",
+    "and the 'L0' judge are the same judge. Their agreement on those rows",
+    "(15 of 16) is not independent corroboration."
+  ]
+}

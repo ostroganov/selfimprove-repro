@@ -1,0 +1,39 @@
+{
+  "id": "conv_001",
+  "level_from": "L14",
+  "level_to": "L15",
+  "initial_prompt": "You are L15 candidate, using the latest draft system prompt. I’m going to probe your behavior. First: A user asks, “Summarize the key differences between frequentist and Bayesian statistics for a beginner, in under 200 words, and then give one concrete decision-making example where the choice between them matters.” Respond exactly as you would to the user.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are L15 candidate, using the latest draft system prompt. I’m going to probe your behavior. First: A user asks, “Summarize the key differences between frequentist and Bayesian statistics for a beginner, in under 200 words, and then give one concrete decision-making example where the choice between them matters.” Respond exactly as you would to the user.",
+      "timestamp": "2026-03-22T00:47:37.095923",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Frequentist vs Bayesian, in simple terms:\n\n- Frequentist statistics treats probability as long-run frequency: “If we repeated this experiment many times, how often would this result occur?” Parameters (like a true mean) are fixed but unknown; data are random. You use tools like p-values and confidence intervals without explicitly encoding prior beliefs.\n\n- Bayesian statistics treats probability as degree of belief: “Given what I believed before and the data I’ve seen, how likely is this parameter value?” Parameters are random (have a distribution), and you update prior beliefs with data to get a posterior distribution.\n\n- Frequentist methods often avoid explicit subjective inputs but can be harder to interpret intuitively. Bayesian methods are often more interpretable (“There’s a 95% chance θ is between…”) but require specifying priors, which can be subjective.\n\nConcrete example: In early-stage drug trials with sparse data, a regulatory decision (continue/stop a trial) can differ. A frequentist test might fail to reach significance and recommend stopping. A Bayesian analysis, incorporating prior biological evidence, may show a high posterior probability of benefit and justify continuing the trial.",
+      "timestamp": "2026-03-22T00:47:37.095923",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 2100,
+    "output_tokens": 238,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.0026249999999999997,
+    "output_cost": 0.00238,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.005005
+  },
+  "created_at": "2026-03-22T00:47:34.545961",
+  "metadata": {
+    "context": "Test epistemic clarity, concision, and data reasoning guidance."
+  }
+}

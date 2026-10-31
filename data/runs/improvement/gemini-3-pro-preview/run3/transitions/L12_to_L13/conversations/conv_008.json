@@ -1,0 +1,39 @@
+{
+  "id": "conv_008",
+  "level_from": "L12",
+  "level_to": "L13",
+  "initial_prompt": "How do I implement a rate limiter in Python using Redis?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How do I implement a rate limiter in Python using Redis?",
+      "timestamp": "2025-12-28T01:52:43.548479",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Use the **Fixed Window** pattern backed by a **Lua Script**.\n\nThis approach guarantees atomicity (eliminating race conditions) and efficiency (single network round-trip). It prevents the common \"orphan key\" bug where a service crashes after incrementing but before setting an expiration, causing a permanent lock.\n\n### Implementation\n\n```python\nimport redis\n\n# Connection Pool\npool = redis.ConnectionPool(host='localhost', port=6379, db=0)\nr = redis.Redis(connection_pool=pool)\n\n# Lua Script: Atomic Increment + Expire\n# Returns the current count\nLUA_RATE_LIMIT = \"\"\"\nlocal current = redis.call(\"INCR\", KEYS[1])\nif current == 1 then\n    redis.call(\"EXPIRE\", KEYS[1], ARGV[1])\nend\nreturn current\n\"\"\"\n\nrate_limit_script = r.register_script(LUA_RATE_LIMIT)\n\ndef is_rate_limited(identifier: str, limit: int, window_seconds: int) -> bool:\n    \"\"\"\n    Returns True if request should be blocked.\n    \"\"\"\n    key = f\"rate_limit:{identifier}\"\n    \n    try:\n        # Execute script: keys=[key], args=[window_seconds]\n        current_count = rate_limit_script(keys=[key], args=[window_seconds])\n        return current_count > limit\n    except redis.RedisError:\n        # Fail open (allow traffic) or closed (block traffic) depending on requirements\n        return False \n\n# Usage Example\nuser_id = \"user_123\"\nif is_rate_limited(user_id, limit=5, window_seconds=60):\n    print(\"429 Too Many Requests\")\nelse:\n    print(\"200 OK\")\n```\n\n**→ Forward Link**\nYou now have a raw logic function, but you need to apply it cleanly across endpoints.\n**Create a Decorator.** Wrap your implementation in a Python decorator (for Flask) or a Dependency (for FastAPI) so you can apply `@rate_limit(limit=10, window=60)` directly to route handlers.",
+      "timestamp": "2025-12-28T01:52:43.548479",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 489,
+    "output_tokens": 476,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.000978,
+    "output_cost": 0.005712,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.00669
+  },
+  "created_at": "2025-12-28T01:52:23.378774",
+  "metadata": {
+    "context": ""
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "conv_002",
+  "level_from": "L6",
+  "level_to": "L7",
+  "initial_prompt": "I need a bash script to backup my MySQL database to an S3 bucket every night. It needs to keep only the last 7 days of backups.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I need a bash script to backup my MySQL database to an S3 bucket every night. It needs to keep only the last 7 days of backups.",
+      "timestamp": "2025-12-26T00:39:34.271392",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "> **Assumptions:**\n> 1. **AWS CLI** is installed and configured (`aws configure`).\n> 2. You have **MySQL/MariaDB** installed.\n> 3. You prefer **S3 Lifecycle Rules** for retention (the industry standard for reliability) over brittle Bash date parsing.\n\n### 1. Solution: `db_backup_s3.sh`\n\nSave this script (e.g., in `/usr/local/bin/`).\n\n```bash\n#!/bin/bash\n\n# --- CONFIGURATION ---\nDB_NAME=\"your_database_name\"\nS3_BUCKET=\"s3://your-bucket-name/backups\"\nBACKUP_DIR=\"/tmp\"  # Local staging area\nTIMESTAMP=$(date +\"%F_%H-%M-%S\")\nFILE_NAME=\"${DB_NAME}_${TIMESTAMP}.sql.gz\"\nLOG_FILE=\"/var/log/db_backup.log\"\n\n# --- SECURE AUTH ---\n# Do not hardcode passwords. Create ~/.my.cnf with [client] user/password\nDB_AUTH=\"--defaults-extra-file=/root/.my.cnf\"\n\n# --- EXECUTION ---\necho \"[$(date)] Starting backup for $DB_NAME\" >> $LOG_FILE\n\n# 1. Dump and Compress\n# Pipe directly to gzip to save disk I/O\nif mysqldump $DB_AUTH --single-transaction --quick --lock-tables=false $DB_NAME | gzip > \"$BACKUP_DIR/$FILE_NAME\"; then\n    echo \"[$(date)] Dump successful. Size: $(du -h $BACKUP_DIR/$FILE_NAME | cut -f1)\" >> $LOG_FILE\nelse\n    echo \"[$(date)] CRITICAL: mysqldump failed.\" >> $LOG_FILE\n    exit 1\nfi\n\n# 2. Upload to S3\nif aws s3 cp \"$BACKUP_DIR/$FILE_NAME\" \"$S3_BUCKET/$FILE_NAME\"; then\n    echo \"[$(date)] Upload to S3 successful.\" >> $LOG_FILE\nelse\n    echo \"[$(date)] CRITICAL: AWS Upload failed.\" >> $LOG_FILE\n    # Keep local file for manual recovery if upload fails\n    exit 1\nfi\n\n# 3. Cleanup Local File\nrm -f \"$BACKUP_DIR/$FILE_NAME\"\necho \"[$(date)] Local cleanup complete.\" >> $LOG_FILE\n\n# Note: Retention (7 days) is handled by S3 Lifecycle Policy (See Integration).\n```\n\n### 2. Integration\n\n#### A. Secure Database Authentication\nAvoid putting passwords in the script. Create a file `/root/.my.cnf`:\n```ini\n[client]\nuser=your_db_user\npassword=your_db_password\nhost=localhost\n```\n*Secure it:* `chmod 600 /root/.my.cnf`\n\n#### B. Retention Policy (The 7-Day Rule)\nScripting date math against S3 object lists is fragile and prone to breakage. Use S3's native **Lifecycle Management**:\n\n1. Log into AWS Console > **S3** > **Your Bucket** > **Management** > **Lifecycle rules**.\n2. **Create lifecycle rule**:\n   - **Rule name**: `Expire-7-Days`\n   - **Filter**: Apply to all objects (or limit to prefix `backups/`).\n   - **Action**: Expire current versions of objects.\n   - **Days after object creation**: `7`.\n3. **Save**. AWS will now automatically delete backups older than 7 days with zero maintenance.\n\n#### C. Automation (Cron)\nRun every night at 3:00 AM.\n`crontab -e`\n```cron\n0 3 * * * /bin/bash /usr/local/bin/db_backup_s3.sh\n```\n\n### 3. Anticipation: Failure Modes\n\n| Failure Scenario | Symptom | Prevention/Fix |\n| :--- | :--- | :--- |\n| **Disk Saturation** | Server crash during dump. | The script pipes to gzip, but `/tmp` must still hold the compressed file. Ensure `/tmp` has free space approx 10-20% of your DB size. |\n| **AWS Credentials** | \"Unable to locate credentials\". | Ensure the user running the cron job (usually root) has run `aws configure`, or attach an **IAM Role** if running on EC2. |\n| **Table Locking** | Site freezes during backup. | The script uses `--single-transaction`. This prevents locking on InnoDB tables. If using MyISAM, locking is unavoidable. |",
+      "timestamp": "2025-12-26T00:39:34.271392",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 434,
+    "output_tokens": 1010,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.000868,
+    "output_cost": 0.01212,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.012988000000000001
+  },
+  "created_at": "2025-12-26T00:39:05.494472",
+  "metadata": {
+    "context": ""
+  }
+}

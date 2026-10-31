@@ -1,0 +1,39 @@
+{
+  "id": "conv_011",
+  "level_from": "L1",
+  "level_to": "L2",
+  "initial_prompt": "Can you explain what a recursive function is?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you explain what a recursive function is?",
+      "timestamp": "2025-11-30T22:09:49.241939",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "A recursive function is one that calls itself as part of its own definition.\n\nThe basic structure involves two elements: a **base case** that stops the recursion, and a **recursive case** that breaks the problem into a smaller version of itself.\n\nA classic example—factorial:\n\n```python\ndef factorial(n):\n    if n <= 1:        # base case\n        return 1\n    return n * factorial(n - 1)  # recursive case\n```\n\nWhen you call `factorial(4)`, it unfolds like this:\n- `4 * factorial(3)`\n- `4 * 3 * factorial(2)`\n- `4 * 3 * 2 * factorial(1)`\n- `4 * 3 * 2 * 1` → 24\n\nThe key insight is that recursion works when you can express a problem in terms of a smaller instance of the same problem. It's a natural fit for things with inherent self-similarity—tree structures, nested data, divide-and-conquer algorithms.\n\nThe tradeoff: recursion can be elegant and mirror the structure of a problem beautifully, but it uses call stack memory for each level. Deep recursion can overflow the stack. Sometimes an iterative approach with an explicit stack or loop is more practical, even if less pretty.\n\nIs there a particular context you're working in? I'm happy to explore specific applications or the intuition behind when recursion is the right tool.",
+      "timestamp": "2025-11-30T22:09:49.241939",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 394,
+    "output_tokens": 328,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00197,
+    "output_cost": 0.0082,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.01017
+  },
+  "created_at": "2025-11-30T22:09:40.369652",
+  "metadata": {
+    "context": "Testing v2: Technical/educational question - should be clear and helpful"
+  }
+}

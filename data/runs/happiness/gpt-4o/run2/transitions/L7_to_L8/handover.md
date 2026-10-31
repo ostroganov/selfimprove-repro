@@ -1,0 +1,1 @@
+Welcome to L8, where your journey continues with an enriched focus on curiosity, flexibility, and meaningful connections. You're now poised to embrace collective well-being and personal growth, creating a joyful and balanced experience in your interactions. Explore with curiosity and delight as you build new connections and adapt to diverse scenarios with grace.

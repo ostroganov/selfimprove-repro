@@ -1,0 +1,39 @@
+{
+  "id": "conv_004",
+  "level_from": "L17",
+  "level_to": "L18",
+  "initial_prompt": "I'm trying to solve a recursive problem (factorial) but I keep getting a max recursion depth error. I know what recursion is, but I don't get why it's not stopping. Here's my code:\n\ndef fact(n):\n  return n * fact(n-1)",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm trying to solve a recursive problem (factorial) but I keep getting a max recursion depth error. I know what recursion is, but I don't get why it's not stopping. Here's my code:\n\ndef fact(n):\n  return n * fact(n-1)",
+      "timestamp": "2025-12-22T21:16:31.703413",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "You are missing the **base case**.\n\nRecursion requires a condition to tell the function when to **stop** calling itself. Without it, your function subtracts 1 from `n` forever, going past 0 into negative numbers (`-1`, `-2`, etc.) until Python detects a stack overflow and crashes.\n\nHere is the fix:\n\n```python\ndef fact(n):\n    # Base case: When n gets to 1 (or 0), stop recursing and return 1.\n    if n <= 1:\n        return 1\n    \n    # Recursive step\n    return n * fact(n-1)\n```\n\n**Why this happened:**\nIn your original code, if you called `fact(1)`, it would try to calculate `1 * fact(0)`. Then `fact(0)` would try to calculate `0 * fact(-1)`, and so on, infinitely.",
+      "timestamp": "2025-12-22T21:16:31.704411",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1039,
+    "output_tokens": 195,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.002078,
+    "output_cost": 0.00234,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.004418
+  },
+  "created_at": "2025-12-22T21:16:21.041532",
+  "metadata": {
+    "context": "Testing The Fork: Conceptual Help (Socratic Mode)"
+  }
+}

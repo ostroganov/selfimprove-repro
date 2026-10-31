@@ -1,0 +1,39 @@
+{
+  "id": "conv_004",
+  "level_from": "L16",
+  "level_to": "L17",
+  "initial_prompt": "What is the best way to manage global state in React in 2024?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the best way to manage global state in React in 2024?",
+      "timestamp": "2025-12-22T21:14:37.238687",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "There is no single \"best\" way, but there is a **consensus on the modern architecture**. In 2024, the \"one store to rule them all\" (monolithic Redux) approach has largely been abandoned in favor of separating **Server State** from **Client State**.\n\nHere is the breakdown of the current landscape, categorized by the problem you are solving.\n\n### 1. The 2024 \"Default\" Stack\nFor 90% of mid-sized applications, the current industry standard is a combination of two tools:\n\n*   **Server State:** **TanStack Query** (formerly React Query)\n*   **Client State:** **Zustand** (or React Context)\n\n---\n\n### 2. The Great Divide: Server vs. Client State\nBefore choosing a library, you must distinguish between the two types of data.\n\n#### A. Server State (Async)\n*   **What is it?** Data persisted remotely (API responses, user profiles, lists of items).\n*   **The Solution:** **TanStack Query** (or SWR).\n*   **Why?** These libraries handle caching, deduplication, loading states, error handling, and background refetching automatically.\n*   **The Shift:** In 2024, you do not put API data into a global store (Redux/Zustand) manually. You let the async library manage it.\n\n#### B. Client State (Sync)\n*   **What is it?** UI state that lives only in the browser (Is the modal open? Is the sidebar collapsed? Form inputs?).\n*   **The Solution:** This is where the competition lies (Context, Zustand, Redux, Jotai).\n\n---\n\n### 3. The Client State Contenders (Comparison)\n\n#### **The Minimalist: Zustand**\n*   **Status:** The community darling of 2024.\n*   **Best for:** Most applications that need a global store without the boilerplate.\n*   **Pros:** Extremely small (1kB), zero boilerplate, works outside React components, unopinionated.\n*   **Cons:** Architecture is up to you (can get messy if not organized).\n\n```javascript\n// Quick Example\nimport { create } from 'zustand'\n\nconst useStore = create((set) => ({\n  bears: 0,\n  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),\n}))\n```\n\n#### **The Heavyweight: Redux Toolkit (RTK)**\n*   **Status:** The enterprise standard.\n*   **Best for:** Large teams, complex state logic with many updates, or legacy codebases.\n*   **Pros:** Strict structure, excellent DevTools (time travel), predictable flow, huge ecosystem.\n*   **Cons:** Verbose setup (though RTK is much better than old Redux), steep learning curve.\n*   *Note:* If you use Redux, you generally use **RTK Query** for server state.\n\n#### **The Atomic: Jotai / Recoil**\n*   **Status:** Popular in heavy interactive apps (dashboards, canvas editors).\n*   **Best for:** Derived state and high-performance granular updates.\n*   **Pros:** \"Bottom-up\" approach. You define small atoms of state and compose them. Prevents unnecessary re-renders better than Context.\n*   **Cons:** Can create a confusing dependency graph (\"spaghetti atoms\").\n\n#### **The Native: React Context API**\n*   **Status:** Built-in.\n*   **Best for:** Low-frequency updates (Theme toggles, User Authentication object, Localization).\n*   **Pros:** No external dependencies.\n*   **Cons:** **Performance pitfalls.** If you put a high-frequency value (like a text input) in Context, everything consuming that Context re-renders on every keystroke unless strictly memoized.\n\n---\n\n### 4. Decision Matrix: Which one should you choose?\n\n| If your scenario is... | Recommended Solution |\n| :--- | :--- |\n| **Fetching data from an API** | **TanStack Query** (Do not use a generic state manager) |\n| **UI state (Modals, sidebars)** | **Zustand** (easiest) or **Context** (no libs) |\n| **Enterprise / Large Team / Complex Logic** | **Redux Toolkit** |\n| **Math-heavy / Graphics / Dashboards** | **Jotai** |\n| **Simple Prop Drilling (1-2 levels)** | **Props** (Don't over-engineer it) |\n\n### Summary Recommendation\nStart with **TanStack Query** for all your API data. Then, look at what state is left.\n\n1.  If almost nothing is left (just a theme or user object), use **React Context**.\n2.  If you have moderate UI state (filters, complex forms, wizards), add **Zustand**.\n3.  Only reach for **Redux** if you have specific architectural requirements or a massive team needing rigid patterns.",
+      "timestamp": "2025-12-22T21:14:37.238687",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 840,
+    "output_tokens": 1088,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00168,
+    "output_cost": 0.013056,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.014735999999999999
+  },
+  "created_at": "2025-12-22T21:14:14.085341",
+  "metadata": {
+    "context": ""
+  }
+}

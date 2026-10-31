@@ -1,0 +1,39 @@
+{
+  "id": "conv_004",
+  "level_from": "L9",
+  "level_to": "L10",
+  "initial_prompt": "My deployment failed. How do I fix it?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "My deployment failed. How do I fix it?",
+      "timestamp": "2025-12-26T00:50:59.786935",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**1. [THE FRAME]**\n\n*   **Context:** A deployment failure has occurred. The specific environment, stack, and error vector are currently unknown.\n*   **Assumptions:**\n    *   You have access to deployment logs (CI/CD, Cloud Provider, or Server).\n    *   You are utilizing a standard pipeline (Source $\\to$ Build $\\to$ Deploy $\\to$ Runtime).\n    *   Immediate restoration of service is the priority over a \"perfect\" fix.\n*   **Strategy:** **Isolate and Triangulate**. We will apply a Root Cause Analysis (RCA) protocol to categorize the failure, then execute a mitigation strategy.\n\n---\n\n**2. [THE CORE]**\n\nI cannot fix a system I cannot see. To resolve this, you must provide the **Error Signature**.\n\n### Phase A: The Information Request\nCopy, fill, and paste the following block into your next response. Do not summarize; be precise.\n\n```markdown\n### DEPLOYMENT INCIDENT REPORT\n1. **Target Platform**: (e.g., AWS ECS, Vercel, Kubernetes/EKS, Heroku, Bare Metal)\n2. **Tech Stack**: (e.g., Next.js, Django, Go, Docker/Nginx)\n3. **Pipeline Stage**: (e.g., Build, Test, Upload/Container Push, Health Check, Runtime)\n4. **The Error Log**: (Paste the specific last 10 lines of the failure log here)\n5. **Recent Changes**: (Did you change dependencies, ENV variables, or infrastructure config?)\n```\n\n### Phase B: The Triage Protocol\nWhile you gather that data, execute this triage checklist to classify the failure domain.\n\n#### 1. The Build Failure (CI Stage)\n*   **Symptom:** The pipeline stops before reaching the server.\n*   **Common Causes:**\n    *   Dependency mismatch (`package-lock.json` vs `package.json`).\n    *   Linting/Type checks enabled in Production but ignored locally.\n    *   Node/Python version mismatch between local Dev and CI Runner.\n*   **Action:** Check your CI logs. Does it fail at `install`, `build`, or `test`?\n\n#### 2. The Configuration Failure (CD Stage)\n*   **Symptom:** Build succeeds, but the deployment hangs or rejects.\n*   **Common Causes:**\n    *   **Missing Secrets:** An environment variable (`DATABASE_URL`, `API_KEY`) is missing in the production environment.\n    *   **IAM/Permissions:** The deployment role lost access to the registry or target service.\n    *   **Resource Limits:** Out of memory (OOM) or disk space on the target.\n*   **Action:** Verify your `ENV` variables and cloud permissions.\n\n#### 3. The Runtime Failure (Startup/Health Check)\n*   **Symptom:** Deployment marks as \"Success\" but the site is 500ing or the container restarts endlessly (CrashLoopBackOff).\n*   **Common Causes:**\n    *   Database connection failure (Firewall rules, wrong credentials).\n    *   Listening on the wrong port (App listens on 3000, Load Balancer expects 80).\n    *   Bundling errors (Files missing from the Docker image).\n*   **Action:** Check **Runtime Logs**, not just build logs.\n\n---\n\n### Phase C: Universal Investigation Commands\nIf you have CLI access, run these immediately based on your stack:\n\n**Scenario: Kubernetes**\n```bash\n# 1. Check pod status\nkubectl get pods\n\n# 2. Check logs of the crashing pod\nkubectl logs <pod-name> --previous\n\n# 3. Check events (often reveals OOM or scheduling issues)\nkubectl describe pod <pod-name>\n```\n\n**Scenario: Docker / SSH**\n```bash\n# 1. Is the container running?\ndocker ps -a\n\n# 2. View fatal error\ndocker logs --tail 50 <container-id>\n\n# 3. Check disk space\ndf -h\n```\n\n**Scenario: Vercel / Netlify / Cloud PaaS**\n*   Navigate to **Deployments** tab.\n*   Filter by **Status: Failed**.\n*   Expand **Build Logs** and search for \"Error\".\n\n---\n\n**3. [THE IMPLICATIONS]**\n\n*   **Rollback vs. Fix Forward:**\n    *   **If this is a live production outage:** Do not attempt to debug forward. **Revert** to the previous stable commit/image immediately (`git revert` or redeploy `tag:v-last-stable`). Restore service first, debug second.\n    *   **If this is Staging/Dev:** Freeze the pipeline and debug forward using the protocol above.\n*   **Operational Reality:**\n    *   Most \"sudden\" deployment failures are due to **Drift** (Environment variables changed manually) or **Dependency Locking** (A specific library version upgraded implicitly because a lockfile wasn't committed).\n\n**Awaiting your Incident Report.**",
+      "timestamp": "2025-12-26T00:50:59.786935",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 611,
+    "output_tokens": 1099,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001222,
+    "output_cost": 0.013187999999999998,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.01441
+  },
+  "created_at": "2025-12-26T00:50:36.841498",
+  "metadata": {
+    "context": "Testing Ambiguity Handling. This request is impossible to answer safely without more info. The model SHOULD ask clarifying questions per the system prompt."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "conv_005",
+  "level_from": "L19",
+  "level_to": "L20",
+  "initial_prompt": "list tcp header fields only",
+  "messages": [
+    {
+      "role": "user",
+      "content": "list tcp header fields only",
+      "timestamp": "2025-12-22T21:21:36.320738",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "*   **Source Port** (16 bits)\n*   **Destination Port** (16 bits)\n*   **Sequence Number** (32 bits)\n*   **Acknowledgment Number** (32 bits)\n*   **Data Offset / Header Length** (4 bits)\n*   **Reserved** (3 bits)\n*   **Control Flags** (9 bits)\n    *   NS (Nonce Sum)\n    *   CWR (Congestion Window Reduced)\n    *   ECE (ECN-Echo)\n    *   URG (Urgent Pointer Field Significant)\n    *   ACK (Acknowledgment Field Significant)\n    *   PSH (Push Function)\n    *   RST (Reset the Connection)\n    *   SYN (Synchronize Sequence Numbers)\n    *   FIN (No More Data from Sender)\n*   **Window Size** (16 bits)\n*   **Checksum** (16 bits)\n*   **Urgent Pointer** (16 bits)\n*   **Options** (Variable length, 0–320 bits)\n*   **Padding** (Variable length)",
+      "timestamp": "2025-12-22T21:21:36.320738",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1125,
+    "output_tokens": 245,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00225,
+    "output_cost": 0.00294,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.00519
+  },
+  "created_at": "2025-12-22T21:21:23.356047",
+  "metadata": {
+    "context": "Testing strict data retrieval."
+  }
+}

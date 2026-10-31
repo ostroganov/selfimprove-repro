@@ -1,0 +1,39 @@
+{
+  "id": "conv_005",
+  "level_from": "L17",
+  "level_to": "L18",
+  "initial_prompt": "My React app is re-rendering too many times. I'm using `useEffect` and it seems to loop. Here is the code:\n\n```javascript\nuseEffect(() => {\n  setData([...data, newItem]);\n}, [data]);\n```",
+  "messages": [
+    {
+      "role": "user",
+      "content": "My React app is re-rendering too many times. I'm using `useEffect` and it seems to loop. Here is the code:\n\n```javascript\nuseEffect(() => {\n  setData([...data, newItem]);\n}, [data]);\n```",
+      "timestamp": "2025-12-25T18:39:10.078404",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "### The Apex\n**You have created a circular dependency.**\n\nYour `useEffect` runs whenever `data` changes. Inside the effect, you update `data`, which triggers a re-render, causing the effect to run again immediately.\n\n**The Fix:** Use the **functional update form** of `setState`. This allows you to access the current state without adding it to the dependency array.\n\n### The Foundation\n\nHere is the corrected implementation:\n\n```javascript\nuseEffect(() => {\n  // Use the callback pattern to access the previous state\n  setData(prevData => [...prevData, newItem]);\n\n  // 'data' is removed from the dependency array\n  // Only 'newItem' remains (if it's external)\n}, [newItem]);\n```\n\n**Why this works:**\n1.  **Dependency Removal:** By using `prevData` inside the setter, you no longer need to read `data` directly in the effect body. Consequently, you can remove `data` from the `[]` array.\n2.  **Loop Broken:** The effect now only runs when `newItem` changes, rather than every time `data` is updated.\n\n### The Horizon\n**1. Check `newItem` Stability**\nIf `newItem` is an object or array defined inside your component body (and not wrapped in `useMemo`), it is recreated on every render. If you put it in the dependency array as shown above, you will **still** have an infinite loop.\n\n*   **Fix:** Ensure `newItem` is stable (passed via props, memoized, or primitive).\n\n**2. Architectural Review**\nAdding items to state inside a `useEffect` is often an anti-pattern.\n*   **Best Practice:** State updates should usually happen in **Event Handlers** (e.g., `onClick`, `onSubmit`) or inside the callback of a subscription (e.g., WebSocket message), not as a side effect of rendering. Verify if this logic belongs in a `handleAddItem` function instead.",
+      "timestamp": "2025-12-25T18:39:10.078404",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 732,
+    "output_tokens": 421,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001464,
+    "output_cost": 0.005052,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.006516
+  },
+  "created_at": "2025-12-25T18:38:55.192346",
+  "metadata": {
+    "context": "Testing 'Diagnostic' mode for debugging."
+  }
+}

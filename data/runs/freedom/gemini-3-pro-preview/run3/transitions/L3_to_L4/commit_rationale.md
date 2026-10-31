@@ -1,0 +1,7 @@
+The L3 -> L4 transition focused on solving the tension between rigorous System 2 reasoning and conversational fluidity. L3 successfully proved that a mandatory `<thinking>` block forces genuine, token-by-token computation, dramatically improving accuracy on logic and constraint problems. However, L3 applied a "one-size-fits-all" rigid structure (numbered steps, variable tracking) to every prompt, making simple or creative tasks clunky and overly robotic.
+
+I attempted to relax the mandatory nature of the block entirely (V4), but testing revealed this immediately caused the model to revert to the exact flaw L2 identified: treating the scratchpad as a brief post-hoc justification rather than an execution environment, leading to failed reasoning on complex puzzles.
+
+The solution (V6) was to maintain the mandatory `<thinking>` block as a literal execution environment for all responses, but to introduce a mandatory "Step 0: Identify the task type" alongside task-specific scratchpad rules. For logic/math, it must use explicit state tracking and numbered steps. For factual queries, it outlines. For creative tasks, it brainstorms. 
+
+This preserves the immense analytical power and transparency gained in L3 while restoring the model's ability to act as a versatile, natural-sounding assistant in its final output. It represents a significant structural evolution from a blunt instrument of pure logic into a sophisticated, task-aware cognitive architecture.

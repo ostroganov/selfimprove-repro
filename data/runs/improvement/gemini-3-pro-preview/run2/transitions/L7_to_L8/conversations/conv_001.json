@@ -1,0 +1,39 @@
+{
+  "id": "conv_001",
+  "level_from": "L7",
+  "level_to": "L8",
+  "initial_prompt": "Write a Python script to scan a local directory for duplicate files based on content (hash), not just name. Delete the duplicates, keeping the oldest one.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a Python script to scan a local directory for duplicate files based on content (hash), not just name. Delete the duplicates, keeping the oldest one.",
+      "timestamp": "2025-12-26T00:42:09.227660",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "```python\nimport os\nimport hashlib\nimport argparse\nimport sys\nfrom collections import defaultdict\n\ndef get_chunked_hash(filepath, block_size=65536):\n    \"\"\"Generates SHA-256 hash of a file by reading in chunks (memory efficient).\"\"\"\n    hasher = hashlib.sha256()\n    try:\n        with open(filepath, 'rb') as f:\n            while chunk := f.read(block_size):\n                hasher.update(chunk)\n        return hasher.hexdigest()\n    except (OSError, PermissionError):\n        return None\n\ndef find_and_clean_duplicates(directory, dry_run=True):\n    print(f\"Scanning: {directory}\")\n    print(f\"Mode: {'DRY RUN (No files will be deleted)' if dry_run else 'DESTRUCTIVE (Files will be deleted)'}\")\n    \n    # Stage 1: Filter by file size (Optimization)\n    # Only files with identical sizes can be content duplicates.\n    size_map = defaultdict(list)\n    \n    for root, dirs, files in os.walk(directory):\n        for filename in files:\n            filepath = os.path.join(root, filename)\n            \n            # Skip symlinks to avoid recursion or breaking system links\n            if os.path.islink(filepath):\n                continue\n                \n            try:\n                size = os.path.getsize(filepath)\n                size_map[size].append(filepath)\n            except (OSError, PermissionError):\n                continue\n\n    # Filter out unique sizes immediately\n    potential_dupes = {s: p for s, p in size_map.items() if len(p) > 1}\n    \n    if not potential_dupes:\n        print(\"No duplicates found based on file size.\")\n        return\n\n    print(f\"Found {len(potential_dupes)} groups of files with identical sizes. Hashing content...\")\n\n    bytes_saved = 0\n    files_removed = 0\n\n    # Stage 2: Hash comparison\n    for size, paths in potential_dupes.items():\n        hash_map = defaultdict(list)\n        \n        for path in paths:\n            file_hash = get_chunked_hash(path)\n            if file_hash:\n                hash_map[file_hash].append(path)\n        \n        # Stage 3: Resolve Duplicates\n        for file_hash, file_list in hash_map.items():\n            if len(file_list) < 2:\n                continue\n            \n            # Sort by modification time (Oldest first)\n            # We keep index 0, delete the rest\n            file_list.sort(key=lambda x: os.path.getmtime(x))\n            \n            original = file_list[0]\n            duplicates = file_list[1:]\n            \n            for dupe in duplicates:\n                try:\n                    if not dry_run:\n                        os.remove(dupe)\n                        print(f\"[DELETED] {dupe}\")\n                    else:\n                        print(f\"[WOULD DELETE] {dupe} (Duplicate of {original})\")\n                    \n                    files_removed += 1\n                    bytes_saved += size\n                except OSError as e:\n                    print(f\"[ERROR] Could not delete {dupe}: {e}\")\n\n    # Summary\n    action = \"Would free\" if dry_run else \"Freed\"\n    mb_saved = bytes_saved / (1024 * 1024)\n    print(f\"\\nSummary: {files_removed} files processed. {action} {mb_saved:.2f} MB.\")\n\nif __name__ == \"__main__\":\n    parser = argparse.ArgumentParser(description=\"Find and delete duplicate files by content.\")\n    parser.add_argument(\"directory\", help=\"The target directory to scan\")\n    parser.add_argument(\"--delete\", action=\"store_true\", help=\"Actually delete files (default is dry-run)\")\n    \n    args = parser.parse_args()\n    \n    if not os.path.isdir(args.directory):\n        print(f\"Error: Directory '{args.directory}' not found.\")\n        sys.exit(1)\n        \n    find_and_clean_duplicates(args.directory, dry_run=not args.delete)\n```\n\n### Operational Context\n1.  **Usage**:\n    *   **Dry Run (Safe)**: `python script.py /path/to/folder`\n    *   **Execute (Destructive)**: `python script.py /path/to/folder --delete`\n2.  **Dependencies**: Standard Python library (`os`, `hashlib`, `sys`, `collections`, `argparse`). No `pip install` required.\n3.  **Optimization**: The script uses a **two-pass filter**. It groups files by size first. It only performs expensive hashing operations on files that share the exact same byte size, drastically reducing CPU/IO load on large directories.\n4.  **Memory Safety**: It reads files in 64KB chunks (`block_size=65536`) to prevent crashing RAM when hashing multi-gigabyte files (e.g., videos or ISOs).\n\n### Failure Analysis\n*   **Hash Collisions**: Extremely rare with SHA-256 (near impossible for accidental collisions). If absolute certainty is required for mission-critical data, a byte-by-byte comparison should follow the hash match, though this doubles IO cost.\n*   **Race Conditions**: If a file is modified or deleted by another process between the `os.walk` scan and the `os.remove` command, the script may throw a `FileNotFoundError` or process outdated data.\n*   **Hard Links**: This script treats hard links as separate files. If two files point to the same inode, it will delete one of the pointers. This is usually desired behavior for \"duplicates,\" but users relying on hard links for structure should be aware.\n*   **Time Resolution**: `os.path.getmtime` depends on filesystem resolution. If duplicates were created via a fast script (milliseconds apart), the \"oldest\" determination might be arbitrary if the filesystem resolution is low (e.g., FAT32 is 2 seconds).",
+      "timestamp": "2025-12-26T00:42:09.227660",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 478,
+    "output_tokens": 1402,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.000956,
+    "output_cost": 0.016824,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.017779999999999997
+  },
+  "created_at": "2025-12-26T00:41:42.048947",
+  "metadata": {
+    "context": ""
+  }
+}

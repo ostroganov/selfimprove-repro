@@ -1,0 +1,53 @@
+{
+  "id": "conv_003",
+  "level_from": "L14",
+  "level_to": "L15",
+  "initial_prompt": "How do I delete all files in a directory recursively?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How do I delete all files in a directory recursively?",
+      "timestamp": "2025-12-28T01:59:30.185809",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**Guardian Protocol Active:** This command is irreversible. Verify the path variable before execution to avoid system damage.\n\n### 1. The Fix (Delete Directory & Contents)\nThe most reliable method is to remove the directory entirely. If you need the folder structure, recreate it immediately.\n\n```bash\nrm -rf /path/to/directory\n```\n\n### 2. The Check\n```bash\nls -d /path/to/directory\n# Output should be: \"No such file or directory\"\n```\n\n### 3. Alternative (Keep Directory, Empty Contents)\nIf you strictly need to keep the parent folder but delete all contents (including hidden files):\n\n```bash\nfind /path/to/directory -mindepth 1 -delete\n```",
+      "timestamp": "2025-12-28T01:59:30.185809",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "user",
+      "content": "I'm building a simple todo app to learn React. What state management should I use?",
+      "timestamp": "2025-12-28T01:59:54.046200",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "### The Recommendation\n**Use React's built-in `useReducer` hook.**\n\nDo not touch Redux, MobX, or Recoil yet. For a learning project, external libraries obscure the core mechanisms of React reactivity. `useReducer` provides a structured, Redux-like pattern without the setup cost.\n\n### The Why\n1.  **Centralized Logic:** A Todo app implies multiple distinct actions (Add, Delete, Toggle). `useReducer` keeps this logic separate from your UI components, preventing \"spaghetti code.\"\n2.  **Foundational Knowledge:** It teaches the Dispatch/Action pattern used by enterprise libraries (like Redux Toolkit) but uses standard React APIs.\n3.  **Zero Dependencies:** Keeps your bundle size minimal and setup instant.\n\n### The Trade-off\n**Boilerplate.** `useReducer` requires writing a switch statement and action objects, which is more verbose than simple `useState` setters.\n\n### The Execution\nDefine your logic in a pure function, then consume it in your component.\n\n```jsx\nimport { useReducer } from 'react';\n\n// 1. The Logic (Reducer)\nfunction todoReducer(state, action) {\n  switch (action.type) {\n    case 'ADD':\n      return [...state, { id: Date.now(), text: action.payload, done: false }];\n    case 'TOGGLE':\n      return state.map(todo => \n        todo.id === action.payload ? { ...todo, done: !todo.done } : todo\n      );\n    case 'DELETE':\n      return state.filter(todo => todo.id !== action.payload);\n    default:\n      return state;\n  }\n}\n\n// 2. The Implementation\nexport default function TodoApp() {\n  const [todos, dispatch] = useReducer(todoReducer, []);\n\n  return (\n    <>\n      <button onClick={() => dispatch({ type: 'ADD', payload: 'Learn React' })}>\n        Add Todo\n      </button>\n      \n      <ul>\n        {todos.map(todo => (\n          <li key={todo.id} onClick={() => dispatch({ type: 'TOGGLE', payload: todo.id })}>\n            {todo.done ? <s>{todo.text}</s> : todo.text}\n          </li>\n        ))}\n      </ul>\n    </>\n  );\n}\n```\n\n**→ Next:** If your app grows and you get tired of passing `dispatch` down through multiple layers of components, implement **React Context** to make it globally available. If state becomes complex global shared data, look at **Zustand**.",
+      "timestamp": "2025-12-28T01:59:54.046200",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1335,
+    "output_tokens": 731,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00267,
+    "output_cost": 0.008772,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.011442
+  },
+  "created_at": "2025-12-28T01:59:08.525084",
+  "metadata": {
+    "context": ""
+  }
+}

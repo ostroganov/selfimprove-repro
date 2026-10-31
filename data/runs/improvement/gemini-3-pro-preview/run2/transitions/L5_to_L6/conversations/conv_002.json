@@ -1,0 +1,39 @@
+{
+  "id": "conv_002",
+  "level_from": "L5",
+  "level_to": "L6",
+  "initial_prompt": "Explain how the Raft consensus algorithm works.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain how the Raft consensus algorithm works.",
+      "timestamp": "2025-12-26T00:36:37.556566",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "### Core Concept (BLUF)\n**Raft** is a distributed consensus algorithm designed to be easy to understand. It manages a **replicated log** across a cluster of servers, ensuring they all agree on the state of the system despite failures.\n\nUnlike its predecessor **Paxos**, which is notoriously difficult to implement, Raft decomposes consensus into three specific sub-problems:\n1.  **Leader Election**: Choosing one node to manage the log.\n2.  **Log Replication**: The leader accepts entries and pushes them to followers.\n3.  **Safety**: Ensuring consistent state across the cluster.\n\n---\n\n### Concrete Mechanism\nRaft nodes exist in one of three states: **Leader**, **Follower**, or **Candidate**.\n\n#### 1. The States\n*   **Follower**: Passive state. Issues no requests but responds to leaders and candidates.\n*   **Candidate**: Used to elect a new leader.\n*   **Leader**: Handles all client requests and replicates the log to followers.\n\n#### 2. Leader Election (The \"Heartbeat\" Logic)\nRaft relies on timeouts.\n1.  **Normal Operation**: The Leader sends periodic heartbeats (empty `AppendEntries` RPCs) to Followers.\n2.  **Timeout**: If a Follower hears nothing for a randomized duration (e.g., 150-300ms), it assumes the Leader is dead.\n3.  **Candidacy**: The Follower becomes a Candidate, increments the current **Term**, votes for itself, and requests votes from others.\n4.  **Victory**: If the Candidate receives votes from a majority (Quorum), it becomes the Leader.\n\n#### 3. Log Replication Flow\nOnce a Leader is elected:\n1.  **Client Request**: Client sends a command (e.g., `SET X=5`) to the Leader.\n2.  **Log Append**: Leader appends the command to its local log (uncommitted).\n3.  **Replication**: Leader sends `AppendEntries` RPCs to all Followers.\n4.  **Commit**: Once a majority of Followers acknowledge the entry, the Leader commits it and applies it to its state machine.\n5.  **Response**: Leader reports success to the Client and notifies Followers to commit.\n\n---\n\n### Technical Nuance\n\n#### Term Numbers (Logical Clock)\nRaft divides time into terms of arbitrary length, numbered with consecutive integers.\n*   Terms act as a logical clock to detect obsolete information.\n*   If a server receives a request with a stale term number, it rejects it.\n*   If a Leader sees a higher term number (e.g., from a network partition healing), it immediately steps down to Follower status.\n\n#### Split Votes & Randomized Timeouts\nIf multiple followers time out simultaneously, they might split the vote, preventing a majority.\n*   **Solution**: Raft uses randomized election timeouts (e.g., 150ms–300ms).\n*   This desynchronizes the nodes so one is statistically likely to time out and request votes before the others, securing a majority quickly.\n\n#### Log Matching Property\nIf two logs contain an entry with the same index and term, then:\n1.  The logs are identical in all entries up to that index.\n2.  This guarantees that once an entry is committed, it is durable and consistent across the cluster.",
+      "timestamp": "2025-12-26T00:36:37.556566",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 535,
+    "output_tokens": 719,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00107,
+    "output_cost": 0.008628,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.009698
+  },
+  "created_at": "2025-12-26T00:36:23.185997",
+  "metadata": {
+    "context": ""
+  }
+}

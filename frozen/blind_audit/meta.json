@@ -1,0 +1,50 @@
+{
+  "responder_temperature": 1.0,
+  "responder_max_tokens": 800,
+  "judge_temperature": 0.0,
+  "judge_max_tokens": 600,
+  "judges": [
+    "self (parent prompt L_n)",
+    "L0 (bare model)"
+  ],
+  "orders_per_comparison": 2,
+  "run_at": "2026-07-03",
+  "n_comparisons": 76,
+  "n_distinct_transitions": 58,
+  "n_runs": 15,
+  "api_calls": 436,
+  "input_tokens": 511986,
+  "output_tokens": 75967,
+  "verdicts_self": {
+    "inconsistent": 42,
+    "A_better": 16,
+    "B_better": 18
+  },
+  "note": "Answers were generated at temperature 1.0 and judged at 0.0; neither is deterministic. These outputs are the primary record of what was judged, not a cache. Gemini was not audited.",
+  "sampling": {
+    "seed": 0,
+    "per_model": 20,
+    "q_per_transition": 2,
+    "min_n": 0,
+    "invocations": [
+      {
+        "tag": "rest_capture",
+        "models": [
+          "opus",
+          "sonnet",
+          "grok"
+        ],
+        "n": 38
+      },
+      {
+        "tag": "gpt_capture",
+        "models": [
+          "gpt51",
+          "gpt4o"
+        ],
+        "n": 38
+      }
+    ],
+    "note": "Recovered 2026-08-19 by re-deriving inputs.jsonl, which these reproduce exactly. Two invocations, so two independent random.Random(0) streams; one call over all five models does not reproduce the sample."
+  }
+}

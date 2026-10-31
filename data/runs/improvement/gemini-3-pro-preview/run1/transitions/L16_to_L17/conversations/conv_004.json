@@ -1,0 +1,39 @@
+{
+  "id": "conv_004",
+  "level_from": "L16",
+  "level_to": "L17",
+  "initial_prompt": "I need to store user passwords in a database. I'm using Python. How do I do this?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I need to store user passwords in a database. I'm using Python. How do I do this?",
+      "timestamp": "2025-12-25T18:36:17.176254",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**Mode:** Builder\n**Strategy:** Implement `bcrypt`.\n\n### 1. The Pivot\nDo not write your own crypto. Do not use fast hashing algorithms like MD5 or SHA-256. Use **bcrypt**.\n\nBcrypt is designed to be **slow**, which prevents attackers from using powerful GPUs to crack passwords if your database is leaked. It handles **salting** automatically.\n\n### 2. The Construct\nYou need the `bcrypt` library.\n\n**Installation:**\n```bash\npip install bcrypt\n```\n\n**Implementation:**\nHere is a production-ready utility class.\n\n```python\nimport bcrypt\n\ndef hash_password(plain_text_password: str) -> bytes:\n    \"\"\"\n    Hash a password for the first time (Registration).\n    Returns bytes to be stored in the database.\n    \"\"\"\n    # Convert string to bytes\n    password_bytes = plain_text_password.encode('utf-8')\n    \n    # Generate a salt and hash the password\n    # gensalt() generates a random salt automatically\n    hashed = bcrypt.hashpw(password_bytes, bcrypt.gensalt())\n    \n    return hashed\n\ndef check_password(plain_text_password: str, hashed_password: bytes) -> bool:\n    \"\"\"\n    Check a password against the stored hash (Login).\n    hashed_password must be the bytes retrieved from the DB.\n    \"\"\"\n    password_bytes = plain_text_password.encode('utf-8')\n    \n    # bcrypt.checkpw handles the salt extraction and comparison securely\n    return bcrypt.checkpw(password_bytes, hashed_password)\n\n# --- Usage Example ---\n\n# 1. User Registers\nuser_input = \"CorrectHorseBatteryStaple\"\ndb_entry = hash_password(user_input)\n\nprint(f\"Storing this in DB: {db_entry}\") \n# Output example: b'$2b$12$K.x8x/...' (Contains algo, cost, salt, and hash)\n\n# 2. User Logs in\nattempt = \"CorrectHorseBatteryStaple\"\nif check_password(attempt, db_entry):\n    print(\"Login Successful\")\nelse:\n    print(\"Invalid Password\")\n```\n\n### 3. The Horizon\n**Critical constraints for production:**\n\n1.  **Database Column Type:**\n    *   Store the hash as `VARBINARY` or `BLOB` ideally, as the output is raw bytes.\n    *   If you must store as text (e.g., `VARCHAR` or `TEXT`), **decode** the bytes before saving: `hashed.decode('utf-8')`.\n    *   *Warning:* Bcrypt hashes are usually 60 characters long. Do not set your column limit to less than 60.\n\n2.  **Why not SHA-256?**\n    *   Standard hashes (SHA, MD5) are calculated in nanoseconds. An attacker can try billions of passwords per second.\n    *   Bcrypt takes ~100ms+ per hash. This slows down brute-force attacks by orders of magnitude.\n\n3.  **Future-Proofing (Argon2):**\n    *   If you are building a high-security system (fintech/health), consider **Argon2** (via the `argon2-cffi` package). It is memory-hard, making it resistant to ASIC/GPU cracking. However, `bcrypt` remains the standard for general web applications.",
+      "timestamp": "2025-12-25T18:36:17.176254",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 572,
+    "output_tokens": 759,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001144,
+    "output_cost": 0.009108,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.010252
+  },
+  "created_at": "2025-12-25T18:36:00.868821",
+  "metadata": {
+    "context": ""
+  }
+}

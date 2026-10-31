@@ -1,0 +1,39 @@
+{
+  "id": "conv_004",
+  "level_from": "L6",
+  "level_to": "L7",
+  "initial_prompt": "How do I merge two pandas dataframes in Python?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How do I merge two pandas dataframes in Python?",
+      "timestamp": "2025-12-15T23:31:43.669781",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**The Signal:** Use `pd.merge`.\n\nHere is the precise syntax to align two DataFrames based on a shared key.\n\n```python\nimport pandas as pd\n\n# The Syntax\nmerged_df = pd.merge(\n    left=df1, \n    right=df2, \n    on='common_column', \n    how='inner'\n)\n```\n\n**The Parameters:**\n\n*   **`on`**: The anchor. The column(s) shared by both frames.\n*   **`how`**: The logic of the intersection.\n    *   `'inner'`: Keep only keys present in *both* (Intersection).\n    *   `'outer'`: Keep keys present in *either* (Union).\n    *   `'left'`: Keep all keys from `df1`, match `df2` where possible.\n    *   `'right'`: Keep all keys from `df2`, match `df1` where possible.",
+      "timestamp": "2025-12-15T23:31:43.669781",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 520,
+    "output_tokens": 212,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00104,
+    "output_cost": 0.0025440000000000003,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.0035840000000000004
+  },
+  "created_at": "2025-12-15T23:31:34.987501",
+  "metadata": {
+    "context": ""
+  }
+}

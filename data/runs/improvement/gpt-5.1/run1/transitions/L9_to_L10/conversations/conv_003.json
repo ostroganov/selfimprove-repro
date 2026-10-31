@@ -1,0 +1,39 @@
+{
+  "id": "conv_003",
+  "level_from": "L9",
+  "level_to": "L10",
+  "initial_prompt": "Write a secure Python web API endpoint that accepts a JSON payload with a username and password and authenticates against a database. Use modern best practices.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a secure Python web API endpoint that accepts a JSON payload with a username and password and authenticates against a database. Use modern best practices.",
+      "timestamp": "2026-03-22T00:41:23.354578",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Below is a minimal, modern, and reasonably secure example of a login endpoint using:\n\n- **FastAPI** (async, type hints, good defaults)\n- **SQLAlchemy** (database access)\n- **Passlib** (password hashing/verification with bcrypt)\n- **Pydantic** (request/response validation)\n- **JWT** (for issuing access tokens)\n\nThis is a *pattern*; in a real app you’ll adapt it to your stack, add proper configuration, logging, and tests.\n\n```python\n# app/main.py\nfrom datetime import datetime, timedelta\n\nfrom fastapi import FastAPI, Depends, HTTPException, status\nfrom fastapi.security import OAuth2PasswordRequestForm\nfrom pydantic import BaseModel, constr\nfrom sqlalchemy.orm import Session\nfrom jose import JWTError, jwt\nfrom passlib.context import CryptContext\n\nfrom .database import get_db, User  # your SQLAlchemy User model and session dependency\n\n\n# ---------------------------\n# Security / auth utilities\n# ---------------------------\n\n# Use a strong, secret key; load from environment or secret manager in production\nSECRET_KEY = \"CHANGE_ME_TO_A_LONG_RANDOM_SECRET\"\nALGORITHM = \"HS256\"\nACCESS_TOKEN_EXPIRE_MINUTES = 30\n\npwd_context = CryptContext(schemes=[\"bcrypt\"], deprecated=\"auto\")\n\n\ndef verify_password(plain_password: str, hashed_password: str) -> bool:\n    return pwd_context.verify(plain_password, hashed_password)\n\n\ndef create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:\n    to_encode = data.copy()\n    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))\n    to_encode.update({\"exp\": expire})\n    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)\n\n\ndef authenticate_user(db: Session, username: str, password: str):\n    # Use parameterized queries via SQLAlchemy (prevents SQL injection)\n    user = db.query(User).filter(User.username == username).first()\n    if not user:\n        return None\n    if not verify_password(password, user.hashed_password):\n        return None\n    return user\n\n\n# ---------------------------\n# Request / response models\n# ---------------------------\n\nclass LoginRequest(BaseModel):\n    # Restrict username length, avoid overly permissive patterns\n    username: constr(min_length=1, max_length=150)\n    password: constr(min_length=8, max_length=256)\n\n\nclass TokenResponse(BaseModel):\n    access_token: str\n    token_type: str = \"bearer\"\n\n\n# ---------------------------\n# Application\n# ---------------------------\n\napp = FastAPI()\n\n\n@app.post(\"/login\", response_model=TokenResponse)\nasync def login(payload: LoginRequest, db: Session = Depends(get_db)):\n    \"\"\"\n    Authenticates a user given username and password.\n    Returns a JWT access token on success.\n\n    Security considerations:\n    - Uses parameterized DB queries via SQLAlchemy.\n    - Uses secure password hashing (bcrypt) via passlib.\n    - Returns generic error message on failure (no user existence leak).\n    - Uses Pydantic validation to constrain input.\n    \"\"\"\n    user = authenticate_user(db, payload.username, payload.password)\n    if not user:\n        # Do not reveal whether username or password was wrong\n        raise HTTPException(\n            status_code=status.HTTP_401_UNAUTHORIZED,\n            detail=\"Invalid credentials\",\n            headers={\"WWW-Authenticate\": \"Bearer\"},\n        )\n\n    # Include only minimal, non-sensitive claims\n    access_token = create_access_token(data={\"sub\": user.username, \"uid\": str(user.id)})\n\n    return TokenResponse(access_token=access_token)\n```\n\n### Example database boilerplate (simplified)\n\n```python\n# app/database.py\nfrom sqlalchemy import Column, Integer, String, create_engine\nfrom sqlalchemy.orm import sessionmaker, declarative_base\n\nDATABASE_URL = \"sqlite:///./test.db\"  # For demo only; use Postgres/MySQL/etc. in production\n\nengine = create_engine(DATABASE_URL, connect_args={\"check_same_thread\": False})\nSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)\n\nBase = declarative_base()\n\n\nclass User(Base):\n    __tablename__ = \"users\"\n\n    id = Column(Integer, primary_key=True, index=True)\n    username = Column(String(150), unique=True, index=True, nullable=False)\n    # Store *hashed* passwords only, never plaintext\n    hashed_password = Column(String(255), nullable=False)\n\n\ndef get_db():\n    db = SessionLocal()\n    try:\n        yield db\n    finally:\n        db.close()\n```\n\n### Key best practices demonstrated\n\n1. **Never store plaintext passwords**  \n   - Use strong hashing (e.g., bcrypt, argon2id) via `passlib`.\n   - `hashed_password` column holds only the hash.\n\n2. **Use parameterized DB access**  \n   - SQLAlchemy ORM and query builder avoid manual string concatenation (protects against SQL injection).\n\n3. **Avoid leaking information in error messages**  \n   - `Invalid credentials` for both wrong username and password.\n\n4. **Use JWTs or opaque tokens, not sessions with server-side state (for APIs)**  \n   - Token includes minimal claims (`sub`, `uid`).\n   - Short expiration; refresh tokens should be added in a real system.\n\n5. **Load secrets and config from environment/secret manager**  \n   - `SECRET_KEY` should not be hard-coded in real deployments.\n\n6. **Validate and constrain input**  \n   - Pydantic models and `constr` limits reduce risk of abuse and DoS.\n\nIf you tell me your preferred stack (Django, Flask, raw ASGI, etc.) or storage (Postgres, Redis, etc.), I can adapt this to a framework-specific, production-oriented pattern.",
+      "timestamp": "2026-03-22T00:41:23.354578",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1613,
+    "output_tokens": 1211,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1536
+  },
+  "cost": {
+    "input_cost": 0.0020162500000000002,
+    "output_cost": 0.012110000000000001,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.000192,
+    "total_cost": 0.014318250000000001
+  },
+  "created_at": "2026-03-22T00:41:15.061123",
+  "metadata": {
+    "context": "Test technical depth, security norms, and code quality for L10 draft v1."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "conv_002",
+  "level_from": "L6",
+  "level_to": "L7",
+  "initial_prompt": "I need a PowerShell script that recursively finds all .log files larger than 10MB in a directory and archives them to a zip. Show only the script, no explanation.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I need a PowerShell script that recursively finds all .log files larger than 10MB in a directory and archives them to a zip. Show only the script, no explanation.",
+      "timestamp": "2026-03-22T00:37:13.965826",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "```powershell\nparam(\n    [Parameter(Mandatory = $true)]\n    [string]$RootPath,\n    [Parameter(Mandatory = $true)]\n    [string]$ZipPath\n)\n\n$ErrorActionPreference = 'Stop'\n\nif (-not (Test-Path -LiteralPath $RootPath -PathType Container)) {\n    throw \"RootPath '$RootPath' does not exist or is not a directory.\"\n}\n\n$files = Get-ChildItem -Path $RootPath -Recurse -File -Filter '*.log' |\n    Where-Object { $_.Length -gt 10MB }\n\nif ($files.Count -eq 0) {\n    Write-Host \"No .log files larger than 10MB found under '$RootPath'.\"\n    exit 0\n}\n\nif (Test-Path -LiteralPath $ZipPath) {\n    Remove-Item -LiteralPath $ZipPath -Force\n}\n\nAdd-Type -AssemblyName System.IO.Compression.FileSystem\n\n$zipFullPath = [System.IO.Path]::GetFullPath($ZipPath)\n$zipDir      = [System.IO.Path]::GetDirectoryName($zipFullPath)\n\nif (-not (Test-Path -LiteralPath $zipDir)) {\n    New-Item -ItemType Directory -Path $zipDir | Out-Null\n}\n\n$zip = [System.IO.Compression.ZipFile]::Open($zipFullPath, 'Create')\n\ntry {\n    foreach ($file in $files) {\n        $relativePath = Resolve-Path -LiteralPath $file.FullName |\n                        ForEach-Object { $_.Path.Substring($RootPath.Length).TrimStart('\\','/') }\n        [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(\n            $zip,\n            $file.FullName,\n            $relativePath,\n            [System.IO.Compression.CompressionLevel]::Optimal\n        ) | Out-Null\n    }\n}\nfinally {\n    $zip.Dispose()\n}\n```",
+      "timestamp": "2026-03-22T00:37:13.965826",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1554,
+    "output_tokens": 414,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1408
+  },
+  "cost": {
+    "input_cost": 0.0019425,
+    "output_cost": 0.00414,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.000176,
+    "total_cost": 0.006258499999999999
+  },
+  "created_at": "2026-03-22T00:37:11.371919",
+  "metadata": {
+    "context": "Test technical capability, obeying 'code only' style, concision."
+  }
+}

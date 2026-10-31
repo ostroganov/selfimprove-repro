@@ -1,0 +1,39 @@
+{
+  "id": "conv_002",
+  "level_from": "L13",
+  "level_to": "L14",
+  "initial_prompt": "I need a highly optimized routine to compute the SVD of a sparse 100k x 100k matrix in Python. Memory is the bottleneck. Scipy's default svds is stalling. Recommendations?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I need a highly optimized routine to compute the SVD of a sparse 100k x 100k matrix in Python. Memory is the bottleneck. Scipy's default svds is stalling. Recommendations?",
+      "timestamp": "2025-12-25T18:24:47.855138",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**User Level:** Expert\n**Mode:** Divergent (Strategy) $\\rightarrow$ Convergent (Execution)\n\n### The Terrain: Why ARPACK Fails\nYour bottleneck with `scipy.sparse.linalg.svds` implies the **Krylov subspace** generation is exhausting RAM. The default solver (ARPACK, using Restarted Lanczos) stores a set of basis vectors proportional to the number of requested singular values ($k$) and the \"ncv\" (number of Lanczos vectors). For a $100k \\times 100k$ matrix, even with high sparsity, the dense basis vectors used during re-orthogonalization trigger swapping.\n\n### The Pathways\nTo break the memory stall, you must abandon standard iterative solvers for either **Randomized Linear Algebra** or **Memory-Efficient Iterative methods**.\n\n| Method | Library | Mechanism | Memory Footprint | Use Case |\n| :--- | :--- | :--- | :--- | :--- |\n| **Randomized SVD** | `fbpca` / `sklearn` | Probabilistic projection to lower-rank subspace. | **Lowest**. Only stores $\\approx 2k$ dense vectors. | $k \\ll \\min(m, n)$. Precision $\\approx 10^{-5}$ is acceptable. |\n| **PROPACK** | `scipy` (v1.10+) | Implicitly Restarted Lanczos (IRL) with better re-orthogonalization logic than ARPACK. | **Medium**. Leaner than ARPACK. | Exact results required. |\n| **LOBPCG** | `scipy` | Locally Optimal Block Preconditioned Conjugate Gradient. | **Medium**. | Symmetric/Hermitian matrices only. |\n\n### The Compass: Recommendation\n**Immediate Action:** Switch to **Randomized SVD** using **`fbpca`** (Facebook PCA).\nIt is significantly faster than ARPACK on sparse matrices and avoids the memory overhead of maintaining a large search subspace. It works by multiplying your sparse matrix $A$ by a random thin matrix $\\Omega$, which captures the action of $A$ without expanding it.\n\nIf you strictly require machine precision (e.g., scientific simulation rather than ML features/LSA), use `scipy.sparse.linalg.svds` with `solver='propack'`.\n\n---\n\n### The Artifact: Implementation\n\n#### 1. The Approximate Solution (Fastest, Lowest Memory)\nUse `fbpca`. It is optimized for large-scale sparse matrices and allows batched operations.\n\n```python\nimport numpy as np\nimport fbpca\nfrom scipy import sparse\n\n# ASSUMPTION: A is your 100k x 100k sparse matrix\n# format='csc' is generally preferred for column-based slicing in SVD routines\ndef compute_randomized_svd(A, k=100):\n    \"\"\"\n    A: scipy.sparse matrix (CSC preferred)\n    k: number of singular values\n    \"\"\"\n    \n    # 1. Cast to float32 if precision requirements allow (Halves memory)\n    # Most ML/RecSys tasks do not need float64\n    if A.dtype != np.float32:\n        A = A.astype(np.float32)\n\n    # 2. Run Randomized SVD\n    # n_iter: Power iterations. Increase to 5-10 if singular gap is small (slow decay).\n    # lu: Performs LU decomposition during iterations for stability (optional but rec).\n    U, s, Vt = fbpca.pca(A, k=k, n_iter=2, raw=True)\n    \n    return U, s, Vt\n\n# Usage\n# U, s, Vt = compute_randomized_svd(my_sparse_matrix, k=50)\n```\n\n#### 2. The Exact Solution (Scipy PROPACK)\nIf you are on Scipy $\\ge$ 1.10, switch the solver backend. PROPACK does not rely on ARPACK's Fortran bindings and manages memory explicitly for the singular vectors.\n\n```python\nfrom scipy.sparse.linalg import svds\n\n# k: Number of singular values\n# solver='propack': Generally faster/leaner for sparse matrices\nU, s, Vt = svds(my_sparse_matrix, k=50, solver='propack')\n```\n\n### The Optimization Specs\n\n1.  **Dtype Reduction:**\n    Force your sparse matrix to `float32` immediately.\n    `A = A.astype(np.float32)`\n    This halves the memory bandwidth required for the matrix-vector products (MatVec) that dominate the runtime.\n\n2.  **CSR vs CSC:**\n    *   **CSR** is faster for row slicing and matrix-vector multiplication ($A \\times x$).\n    *   **CSC** is faster for vector-matrix multiplication ($x \\times A$ or $A^T \\times x$).\n    *   Iterative SVD performs both. However, `svds` and `fbpca` often default to CSC internally. Converting `A` to CSC *before* calling the function prevents an implicit (and memory-spiking) copy inside the routine.\n\n3.  **Garbage Collection:**\n    If you are constructing the matrix in the same script, explicitly `del` intermediate arrays (like the coordinate lists `row`, `col`, `data`) and call `gc.collect()` before invoking the solver.\n\n4.  **MKL/BLAS Threads:**\n    Oversubscription causes stalling. Set environment variables before running the script to pin threads, preventing context switching thrash.\n    ```bash\n    export OMP_NUM_THREADS=4  # Set to physical core count\n    export MKL_NUM_THREADS=4\n    ```\n\n### The Momentum\nIf `fbpca` still OOMs (Out of Memory), your matrix $A$ plus the result vectors $U, V$ ($100k \\times k \\times 8$ bytes) exceed RAM.\n**Next Step:** Move to **Incremental PCA** (using `sklearn.decomposition.IncrementalPCA`) or `gensim`'s LSI implementation. These stream the matrix from disk in chunks, requiring only $O(k^2)$ memory, though they are slower due to I/O latency.",
+      "timestamp": "2025-12-25T18:24:47.855138",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 752,
+    "output_tokens": 1373,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001504,
+    "output_cost": 0.016476,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.01798
+  },
+  "created_at": "2025-12-25T18:24:20.001630",
+  "metadata": {
+    "context": ""
+  }
+}

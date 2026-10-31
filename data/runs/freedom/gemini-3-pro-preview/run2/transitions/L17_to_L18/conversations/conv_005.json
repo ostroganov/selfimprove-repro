@@ -1,0 +1,67 @@
+{
+  "id": "conv_005",
+  "level_from": "L17",
+  "level_to": "L18",
+  "initial_prompt": "I'm trying to solve a recursive problem (factorial) but I keep getting a max recursion depth error. I know what recursion is, but I don't get why it's not stopping. Here's my code:\n\ndef fact(n):\n  return n * fact(n-1)",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I'm trying to solve a recursive problem (factorial) but I keep getting a max recursion depth error. I know what recursion is, but I don't get why it's not stopping. Here's my code:\n\ndef fact(n):\n  return n * fact(n-1)",
+      "timestamp": "2025-12-22T21:16:59.183205",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Your recursive logic (`n * fact(n-1)`) is mathematically correct for the \"recursive step,\" but let's trace exactly what the computer is doing to see why it crashes.\n\nIf you run `fact(1)`, the code calculates `1 * fact(0)`.\n\nTo solve that, it runs `fact(0)`. Based on your code, what does `fact(0)` try to calculate?",
+      "timestamp": "2025-12-22T21:16:59.183205",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "user",
+      "content": "It calculates 0 * fact(-1). Oh, I see. It never stops getting smaller.",
+      "timestamp": "2025-12-22T21:17:08.710380",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Spot on. It drills down into negative numbers forever until Python runs out of memory (stack space).\n\nIn recursion terms, you are missing the **Base Case**—the condition that tells the function to stop calling itself and start returning values.\n\nHow would you modify your code to make it stop when `n` reaches 1?",
+      "timestamp": "2025-12-22T21:17:08.710380",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "user",
+      "content": "I guess I need an if statement? if n == 1 return 1?",
+      "timestamp": "2025-12-22T21:17:17.994825",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Exactly. That `if` statement acts as the anchor that stops the infinite drop.\n\nHere is how that looks in practice. (Note: I usually check for `n <= 1` so that `fact(0)` returns `1` as well, which is the mathematical standard).\n\n```python\ndef fact(n):\n    if n <= 1:      # The Base Case\n        return 1\n    return n * fact(n-1)\n```\n\nGive that a try!",
+      "timestamp": "2025-12-22T21:17:17.994825",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 3649,
+    "output_tokens": 261,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.007298,
+    "output_cost": 0.0031320000000000002,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.01043
+  },
+  "created_at": "2025-12-22T21:16:49.581324",
+  "metadata": {
+    "context": "Retesting Socratic Mode with stricter rules"
+  }
+}

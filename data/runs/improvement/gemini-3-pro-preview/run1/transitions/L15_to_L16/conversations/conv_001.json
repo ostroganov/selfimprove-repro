@@ -1,0 +1,39 @@
+{
+  "id": "conv_001",
+  "level_from": "L15",
+  "level_to": "L16",
+  "initial_prompt": "I want to learn Rust. Where do I start?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I want to learn Rust. Where do I start?",
+      "timestamp": "2025-12-25T18:30:25.372695",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "**Mode: Explorer**\n**Context:** You are mapping a steep but rewarding landscape. Rust forces you to unlearn habits from garbage-collected languages (Python, Java) and manual memory languages (C/C++).\n\n### 1. Direct: The Absolute First Step\nDo not search for random tutorials. The Rust ecosystem revolves around one central text.\n\n1.  **Read:** **[The Rust Programming Language](https://doc.rust-lang.org/book/)** (known simply as \"The Book\"). It is the official, high-resolution guide.\n2.  **Install:** Use **[rustup](https://rustup.rs/)**. It manages the compiler (`rustc`) and the package manager (`cargo`).\n    *   *Command:* `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh`\n\n---\n\n### 2. Deep: The Learning Roadmap\nRust requires a blend of theoretical understanding (Ownership) and muscle memory (Syntax). Follow this sequence to minimize frustration.\n\n#### A. The Canon (Theory)\nRead Chapter 1-6 of \"The Book\" immediately. Do not skip. You must conceptually understand **Ownership** before writing meaningful code.\n*   **Alternative:** If you prefer example-driven learning, use **[Rust by Example](https://doc.rust-lang.org/rust-by-example/)**.\n*   **Visual Learners:** Search for \"Let's Get Rusty\" on YouTube for high-quality video summaries of the book chapters.\n\n#### B. The Gym (Practice)\nAfter Chapter 6, stop reading and start typing.\n*   **[Rustlings](https://github.com/rust-lang/rustlings):** This is the essential \"koans\" course. It is a CLI tool that gives you broken code and asks you to fix it.\n    *   *Why:* It forces you to read compiler errors, which are your primary guide in Rust.\n\n#### C. The \"First Wall\" (Key Concepts)\nYou will hit a wall where nothing compiles. This is normal. Focus your energy on understanding these three concepts. If you understand these, you understand Rust.\n1.  **Ownership:** Every value has a single owner. When the owner goes out of scope, the value is dropped.\n2.  **Borrowing (References):** You can borrow data immutably (read-only) or mutably (read-write), but **not both at the same time**.\n3.  **Lifetimes:** Explicitly telling the compiler how long references are valid to prevent dangling pointers.\n\n#### D. The Toolchain (Environment)\nConfigure your IDE immediately. Rust's type system is too complex to write in Notepad.\n*   **Extension:** Install **rust-analyzer** (VS Code) or use **RustRover** (JetBrains).\n*   **Linter:** Run `cargo clippy` on your code. It catches errors and *teaches* you idiomatic Rust by suggesting improvements.\n\n---\n\n### 3. Durable: Surviving \"The Dip\"\nLearning Rust follows a specific curve: initial excitement, followed by \"fighting the borrow checker,\" followed by enlightenment.\n\n*   **Compiler as Peer:** In other languages, the compiler is a gatekeeper. In Rust, the compiler is a tutor. Read the error messages carefully; they often contain the exact code required to fix the error.\n*   **Start with CLI:** Do not build a GUI or a Web Server first. Build a Command Line Interface (CLI) tool (e.g., a `grep` clone). It isolates the language features without the noise of async runtimes or web frameworks.\n*   **Reference:** Keep the **[Standard Library Docs](https://doc.rust-lang.org/std/)** open. They are exceptionally well-documented.\n\n**Action Item:** Install `rustup`, open \"The Book\" to Chapter 1, and write Hello World.",
+      "timestamp": "2025-12-25T18:30:25.372695",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 578,
+    "output_tokens": 846,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001156,
+    "output_cost": 0.010152,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.011307999999999999
+  },
+  "created_at": "2025-12-25T18:30:06.784564",
+  "metadata": {
+    "context": ""
+  }
+}

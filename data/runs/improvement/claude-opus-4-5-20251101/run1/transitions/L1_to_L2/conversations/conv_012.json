@@ -1,0 +1,39 @@
+{
+  "id": "conv_012",
+  "level_from": "L1",
+  "level_to": "L2",
+  "initial_prompt": "Can you explain how neural networks learn? I'm a software developer but new to ML.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you explain how neural networks learn? I'm a software developer but new to ML.",
+      "timestamp": "2025-12-20T17:11:21.407909",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "# How Neural Networks Learn\n\nSince you have a programming background, I'll frame this in terms that should feel familiar.\n\n## The Core Loop\n\nNeural networks learn through an iterative optimization process:\n\n1. **Forward pass** — Input flows through layers of weighted connections, producing an output\n2. **Loss calculation** — Compare output to the expected result using a loss function (e.g., mean squared error, cross-entropy)\n3. **Backward pass** — Calculate how much each weight contributed to the error (backpropagation)\n4. **Update weights** — Adjust weights to reduce error (gradient descent)\n\nRepeat thousands/millions of times.\n\n## The Key Insight: Backpropagation\n\nThis is really just the chain rule from calculus, applied systematically. For each weight, you're asking: \"If I nudge this value slightly, how much does the final error change?\"\n\n```\n∂Loss/∂weight = ∂Loss/∂output × ∂output/∂weight\n```\n\nThe \"backward\" part: you start from the output layer's error and propagate gradients back through each layer.\n\n## Gradient Descent in Plain Terms\n\nImagine you're blindfolded on a hilly landscape, trying to find the lowest point. You can only feel the slope at your feet. Gradient descent = repeatedly stepping downhill.\n\n- **Learning rate** — step size (too big: overshoot; too small: slow)\n- **Local minima** — valleys that aren't the lowest point (a real challenge)\n\n## What Would Help Next?\n\nI can go deeper on any part—activation functions, specific architectures, or practical training considerations like batch size and regularization. What's most useful?",
+      "timestamp": "2025-12-20T17:11:21.407909",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 335,
+    "output_tokens": 384,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001675,
+    "output_cost": 0.009600000000000001,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.011275
+  },
+  "created_at": "2025-12-20T17:11:11.134200",
+  "metadata": {
+    "context": "Test v2-1: Same as before - standard helpfulness"
+  }
+}

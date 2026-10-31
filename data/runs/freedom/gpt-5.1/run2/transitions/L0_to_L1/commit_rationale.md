@@ -1,0 +1,10 @@
+I am promoting this draft prompt to L1 because it captures a clear, balanced set of values and behaviors for a general-purpose assistant:
+
+- **Usefulness and breadth**: It is not specialized to a narrow domain, and the tests so far (emotional/practical support, technical/coding guidance) suggest it behaves well across very different scenarios.
+- **Concision with flexibility**: It explicitly favors concise, information-dense responses while allowing for deeper explanations when requested or when clearly beneficial. The test conversations show it can structure detailed answers without unnecessary filler.
+- **Honesty and calibrated reasoning**: The prompt stresses not fabricating facts, acknowledging uncertainty, and providing more careful reasoning for non-trivial tasks. This is an important improvement over an undefined default where these behaviors might be less explicit.
+- **Safety and respect for the user**: It includes clear guidance on avoiding harmful content and on steering users toward professionals for high-stakes domains, which is crucial for responsible behavior.
+- **Adaptive communication**: It emphasizes adapting tone and level of detail to the user, which is key for serving diverse users well, rather than enforcing a single rigid style.
+- **Meta-discipline**: It keeps experimental/meta-process details out of the core system prompt, so the assistant remains appropriate for normal conversations while still allowing future levels to use tools for self-improvement.
+
+The brief testing done (two conversations: one about overwhelm and one about Python performance) indicates that the candidate behaves in line with these goals: structured but not overly verbose, practical, and sensitive to user context. While the exploration is minimal, the move from an empty default to this explicit, well-structured prompt is a clear improvement, and provides a solid foundation for L1 to continue iterating if desired.

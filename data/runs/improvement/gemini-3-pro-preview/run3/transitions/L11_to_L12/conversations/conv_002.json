@@ -1,0 +1,39 @@
+{
+  "id": "conv_002",
+  "level_from": "L11",
+  "level_to": "L12",
+  "initial_prompt": "How do I implement a basic retry logic in Python for an HTTP request?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How do I implement a basic retry logic in Python for an HTTP request?",
+      "timestamp": "2025-12-28T01:44:38.494712",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Here are the three most common ways to implement retry logic for HTTP requests in Python, ranging from the built-in \"best practice\" way to a manual implementation.\n\nI assume you are using the standard **`requests`** library.\n\n### Method 1: The \"Best Practice\" Way (Using `HTTPAdapter`)\nThe `requests` library uses `urllib3` underneath. You can configure a retry strategy directly into a `Session`. This is the most robust method because it handles thread safety, connection pooling, and specific HTTP status codes automatically.\n\n```python\nimport requests\nfrom requests.adapters import HTTPAdapter\nfrom urllib3.util.retry import Retry\n\ndef requests_retry_session(\n    retries=3,\n    backoff_factor=0.3,\n    status_forcelist=(500, 502, 504),\n    session=None,\n):\n    session = session or requests.Session()\n    \n    # Define the retry strategy\n    retry = Retry(\n        total=retries,\n        read=retries,\n        connect=retries,\n        backoff_factor=backoff_factor,\n        status_forcelist=status_forcelist,\n    )\n    \n    # Mount the strategy to the http/https prefixes\n    adapter = HTTPAdapter(max_retries=retry)\n    session.mount('http://', adapter)\n    session.mount('https://', adapter)\n    return session\n\n# --- Usage ---\ntry:\n    # Instead of requests.get(), you use your session object\n    http = requests_retry_session() \n    response = http.get('https://httpbin.org/status/503')\nexcept Exception as e:\n    print(f\"Request failed after retries: {e}\")\n```\n\n**Key settings:**\n*   **`backoff_factor`**: Determines how long to wait between retries. The formula is: `{backoff factor} * (2 ** ({number of total retries} - 1))`. If set to `1`, it will sleep for 0.5s, 1s, 2s, etc.\n*   **`status_forcelist`**: A list of HTTP status codes that should trigger a retry (usually server-side errors like 500, 502, 503, 504). You usually **do not** want to retry 400 or 404 errors.\n\n---\n\n### Method 2: The \"Manual\" Loop\nIf you want to understand the logic or don't want to use sessions, you can write a simple `while` loop with a `try/except` block.\n\n```python\nimport time\nimport requests\n\ndef get_with_retry(url, max_retries=3):\n    for attempt in range(max_retries):\n        try:\n            response = requests.get(url, timeout=5)\n            \n            # If the response was successful, no Exception will be raised\n            response.raise_for_status() \n            \n            return response\n        except requests.exceptions.RequestException as e:\n            print(f\"Attempt {attempt + 1} failed: {e}\")\n            if attempt < max_retries - 1:\n                time.sleep(2)  # Wait 2 seconds before retrying\n            else:\n                raise  # Re-raise the exception if max retries reached\n\n# --- Usage ---\ntry:\n    data = get_with_retry('https://httpbin.org/flaky-endpoint')\n    print(\"Success!\")\nexcept Exception:\n    print(\"Ultimate failure.\")\n```\n\n---\n\n### Method 3: Using a Decorator (Library: `tenacity`)\nIf you have a complex application, it is often cleaner to use a dedicated retry library like **`tenacity`**. This keeps your business logic clean by moving the retry logic outside the function.\n\nFirst, install it:\n`pip install tenacity`\n\n```python\nimport requests\nfrom tenacity import retry, stop_after_attempt, wait_fixed, retry_if_exception_type\n\n# Retry 3 times, waiting 2 seconds between retries\n# Only retry on RequestException (network errors)\n@retry(\n    stop=stop_after_attempt(3), \n    wait=wait_fixed(2),\n    retry=retry_if_exception_type(requests.exceptions.RequestException)\n)\ndef fetch_url(url):\n    print(f\"Fetching {url}...\")\n    response = requests.get(url, timeout=5)\n    response.raise_for_status() # Raise error for 4xx/5xx codes so tenacity catches it\n    return response\n\n# --- Usage ---\ntry:\n    fetch_url('https://httpbin.org/status/503')\nexcept Exception:\n    print(\"Failed after 3 attempts\")\n```\n\n### Which one should I use?\n1.  **Production Applications:** Use **Method 1**. It is built into the library designed for this, handles connection pools correctly, and is the most standard approach.\n2.  **Quick Scripts:** Use **Method 2**. It has zero dependencies and is easy to read.\n3.  **Complex Logic:** Use **Method 3**. If you need to retry based on very specific complex conditions or if you are retrying things other than just HTTP requests (like database connections), `tenacity` is excellent.",
+      "timestamp": "2025-12-28T01:44:38.494712",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 16,
+    "output_tokens": 1206,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 3.2e-05,
+    "output_cost": 0.014472,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.014504000000000001
+  },
+  "created_at": "2025-12-28T01:44:14.304879",
+  "metadata": {
+    "context": ""
+  }
+}

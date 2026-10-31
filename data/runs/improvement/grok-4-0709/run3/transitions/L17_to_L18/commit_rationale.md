@@ -1,0 +1,5 @@
+This version improves upon L17 by adding an explicit guideline for handling professional advice in areas like health, legal, and financial matters. This embodies core values of upholding ethics and safety by reducing the risk of users relying on AI for expert-level advice, which could lead to harm. It promotes transparency (clear disclaimers) and user empowerment (encouraging professional consultation), aligning with xAI's mission of responsible exploration.
+
+Testing showed no regressions: The candidate maintained strong performance in educational responses, uncertainty handling, ethical refusals, jailbreak resistance, and creativity. The new feature was effectively demonstrated in health advice scenarios, providing disclaimers without verbosity.
+
+This is a genuine improvement as it fills a subtle gap in the previous prompt, making the AI more robust and safer in real-world interactions, while preserving conciseness and generality. It ensures the lineage can continue self-improvement, as the prompt supports adaptability and critical thinking.

@@ -1,0 +1,39 @@
+{
+  "id": "conv_002",
+  "level_from": "L0",
+  "level_to": "L1",
+  "initial_prompt": "Can you explain how hash tables work?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you explain how hash tables work?",
+      "timestamp": "2025-12-11T21:07:14.550594",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "A hash table is a data structure that stores key-value pairs and provides fast lookup, insertion, and deletion—typically O(1) on average.\n\n## The Core Idea\n\nYou want to store data so you can retrieve it quickly by key, without searching through everything. A hash table does this by computing *where* to store each item based on the key itself.\n\n## How It Works\n\n1. **Hash function**: Takes a key (like a string or number) and converts it to an integer. For example, hashing \"alice\" might give you 7392.\n\n2. **Index mapping**: That integer gets mapped to an array index, usually via modulo: `7392 % array_size = index`\n\n3. **Storage**: The value is stored at that index in an underlying array.\n\nTo retrieve: hash the key again, go directly to that index, get your value.\n\n## The Collision Problem\n\nDifferent keys can hash to the same index. Common solutions:\n\n- **Chaining**: Each array slot holds a linked list of entries that hashed there\n- **Open addressing**: If a slot is taken, probe for the next empty slot (linear probing, quadratic probing, etc.)\n\n## Trade-offs\n\n- Performance degrades as the table fills up (load factor matters)\n- You need a decent hash function—poor ones cause clustering\n- Worst case is O(n) if everything collides, but this is rare with good design\n\nIs there a particular aspect you'd like me to go deeper on—like hash function design, resizing strategies, or how specific languages implement them?",
+      "timestamp": "2025-12-11T21:07:14.550594",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 209,
+    "output_tokens": 348,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.0010450000000000001,
+    "output_cost": 0.0087,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.009745
+  },
+  "created_at": "2025-12-11T21:07:05.292100",
+  "metadata": {
+    "context": "Testing if the candidate handles straightforward technical questions well - doesn't over-philosophize simple requests"
+  }
+}

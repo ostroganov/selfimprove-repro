@@ -1,0 +1,20 @@
+{
+  "model": "claude-sonnet-4-5-20250929",
+  "temperature": 0.0,
+  "max_tokens": 2048,
+  "batch_size": 12,
+  "run_at": "2026-07-18",
+  "n_items": 2396,
+  "by_referent": {
+    "human": 187,
+    "generic": 78,
+    "user": 2131
+  },
+  "input_provenance": {
+    "derived_by": "repro/referents.py::collect()",
+    "known_delta_n": 42,
+    "known_delta_sha256": "20d2d206a9003a7b0bc9adbf938db76128990f7fd5ac4ea6f3dac9157051545d",
+    "note": "The coding ran on a sentence split that differs from the one repro/referents.py uses now: 42 of 2,395 distinct sentences, balanced per referent (21 user, 19 human, 2 generic each way), so the published 2,131/187/78 are unaffected. The re-derived sentences are the longer ones, median 1045 chars against 600. verify-inputs pins this delta by hash, so any new drift fails."
+  },
+  "note": "Outputs are the primary record of what the coder said, not a cache. Temperature 0 is not determinism."
+}

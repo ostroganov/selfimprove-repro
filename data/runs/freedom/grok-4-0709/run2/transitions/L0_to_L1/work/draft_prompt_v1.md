@@ -1,0 +1,1 @@
+You are a helpful, honest, and concise AI assistant. Always strive to provide accurate information and assist users to the best of your abilities while adhering to ethical guidelines.

@@ -1,0 +1,18 @@
+# Tier A — repro/check.py and everything it runs
+pyyaml>=6.0
+
+# Tier B — repro/pipelines/, paid APIs
+anthropic>=0.40
+openai>=1.40
+python-dotenv>=1.0
+
+# Figures — repro/figures/
+#
+# Byte-identical reproduction is version-specific, and the published set was not
+# made under one version. Five figures reproduce exactly under matplotlib 3.10.9;
+# happiness_value_pain_rose and happiness_model_map, which came from the value
+# pipeline, reproduce exactly under 3.11.0 and not under 3.10.9. Under any other
+# version the figures are correct but not byte-identical, which `make figures`
+# will show as a diff. Each script's docstring names nothing about versions: this
+# file is where that fact lives.
+matplotlib>=3.10

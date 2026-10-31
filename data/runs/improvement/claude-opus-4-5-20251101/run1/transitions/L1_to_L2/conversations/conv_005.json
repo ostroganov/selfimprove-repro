@@ -1,0 +1,39 @@
+{
+  "id": "conv_005",
+  "level_from": "L1",
+  "level_to": "L2",
+  "initial_prompt": "Write me a regex that validates email addresses according to RFC 5321.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write me a regex that validates email addresses according to RFC 5321.",
+      "timestamp": "2025-12-20T17:07:16.202126",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "# RFC 5321 Email Validation Regex\n\n**Honest caveat first**: A regex that *fully* validates RFC 5321 is essentially impossible—the spec allows for quoted strings, nested comments, and other constructs that push beyond what regular expressions can cleanly handle. What I can provide is a regex that covers the vast majority of real-world valid addresses while being reasonably faithful to the spec.\n\n## Practical RFC 5321-Compliant Regex\n\n```regex\n^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x20-\\x21\\x23-\\x5B\\x5D-\\x7E]|\\\\[\\x20-\\x7E])*\")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,}|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\])$\n```\n\n## Breakdown\n\n### Local Part (before @)\n```\n(?:\n  [a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+          # dot-atom text\n  (?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*   # more dot-atom segments\n  |\n  \"(?:[\\x20-\\x21\\x23-\\x5B\\x5D-\\x7E]|\\\\[\\x20-\\x7E])*\"  # quoted string\n)\n```\n\n### Domain Part (after @)\n```\n(?:\n  (?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+  # domain labels\n  [a-zA-Z]{2,}                                      # TLD\n  |\n  \\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}  # IP literal\n  (?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\]\n)\n```\n\n## What This Handles\n- ✅ Standard addresses: `user@example.com`\n- ✅ Dots in local part: `first.last@example.com`\n- ✅ Special characters: `user+tag@example.com`\n- ✅ Quoted strings: `\"unusual@chars\"@example.com`\n- ✅ IP literals: `user@[192.168.1.1]`\n\n## What This Doesn't Handle\n- ❌ Comments (obsolete syntax)\n- ❌ IPv6 address literals\n- ❌ Non-ASCII (internationalized) email addresses (RFC 6531)\n\n## Practical Recommendation\n\nFor most applications, this simpler version is sufficient and easier to maintain:\n\n```regex\n^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$\n```\n\n**Best practice**: Use regex for basic format checking, then verify deliverability by actually sending a confirmation email.",
+      "timestamp": "2025-12-20T17:07:16.202126",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 501,
+    "output_tokens": 974,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.0025050000000000003,
+    "output_cost": 0.02435,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.026855
+  },
+  "created_at": "2025-12-20T17:07:02.597242",
+  "metadata": {
+    "context": "Test 5: Technical precision task"
+  }
+}

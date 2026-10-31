@@ -1,0 +1,39 @@
+{
+  "id": "conv_007",
+  "level_from": "L17",
+  "level_to": "L18",
+  "initial_prompt": "How do I secure a REST API using JWTs?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How do I secure a REST API using JWTs?",
+      "timestamp": "2025-12-25T18:39:49.503907",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "### The Apex\nTo secure a REST API with JWTs, you must implement a **Stateless Token Strategy**.\n\nThe process consists of two distinct phases:\n1.  **Issuance:** The server verifies credentials (login) and signs a JSON object (payload) with a secret key to generate a token.\n2.  **Verification:** A middleware intercepts every protected API request, checks the `Authorization` header, and validates the token's signature before allowing access.\n\n---\n\n### The Foundation\nHere is the implementation workflow using **Node.js/Express** (the logic applies universally to Python, Go, Java, etc.).\n\n#### 1. The High-Level Logic\n*   **Client:** Sends Username/Password.\n*   **Server:** Validates DB record $\\to$ Generates JWT $\\to$ Sends back to Client.\n*   **Client:** Stores JWT $\\to$ Sends JWT in `Authorization` header for subsequent requests.\n*   **Server:** Decodes JWT $\\to$ Checks expiration and signature $\\to$ Grants/Denies access.\n\n#### 2. The Implementation (Node.js Example)\n*Prerequisite:* `npm install jsonwebtoken`\n\n**A. Issue the Token (Login Route)**\n```javascript\nconst jwt = require('jsonwebtoken');\n\napp.post('/login', (req, res) => {\n    // 1. Validate User Credentials (Mock DB check)\n    const user = { id: 1, username: 'dev_user' }; // Fetch real user from DB\n\n    // 2. Sign the Token\n    // payload: data you want inside the token\n    // secret: a long, random string (store in ENV variables)\n    // expiresIn: security best practice\n    const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '15m' });\n\n    res.json({ token });\n});\n```\n\n**B. The Guard Middleware (Protect Routes)**\nCreate a function to intercept requests before they reach your controller.\n\n```javascript\nfunction authenticateToken(req, res, next) {\n    // 1. Extract Token from Header\n    // Standard format: \"Authorization: Bearer <token>\"\n    const authHeader = req.headers['authorization'];\n    const token = authHeader && authHeader.split(' ')[1];\n\n    if (token == null) return res.sendStatus(401); // No token present\n\n    // 2. Verify Token\n    jwt.verify(token, process.env.JWT_SECRET, (err, decodedPayload) => {\n        if (err) return res.sendStatus(403); // Token invalid or expired\n\n        // 3. Attach user data to request for use in the next route\n        req.user = decodedPayload.user; \n        next(); // Pass control to the actual route handler\n    });\n}\n```\n\n**C. Apply to Routes**\n```javascript\n// This route is now protected\napp.get('/api/orders', authenticateToken, (req, res) => {\n    // Access the user data we attached in the middleware\n    res.json({ message: `Orders for user ${req.user.username}` });\n});\n```\n\n---\n\n### The Horizon\nThis implementation gets you running, but production security requires three specific optimizations:\n\n1.  **Storage Strategy (The XSS vs. CSRF Trade-off):**\n    *   *Common (Risky):* Storing JWT in `localStorage`. This is vulnerable to XSS (malicious scripts reading your token).\n    *   *Secure:* Store the JWT in an **HttpOnly Cookie**. This prevents JavaScript from reading it, blocking XSS attacks.\n\n2.  **Token Lifecycle (Refresh Tokens):**\n    *   JWTs should have short lifespans (e.g., 15 minutes) to limit damage if stolen.\n    *   Implement a **Refresh Token** flow: a long-lived token stored in the database that allows the client to request a new access token without the user logging in again.\n\n3.  **Algorithm Choice:**\n    *   Use **HS256** (Symmetric) if the authentication and API servers are the same app (shared secret).\n    *   Use **RS256** (Asymmetric) if you have a separate Auth Server. The Auth Server signs with a *Private Key*; the API Server verifies with a *Public Key*.\n\n**Immediate Action:** Ensure you are using **HTTPS**. Sending tokens over HTTP exposes them to anyone sniffing network traffic.",
+      "timestamp": "2025-12-25T18:39:49.503907",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 700,
+    "output_tokens": 975,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.0014,
+    "output_cost": 0.011699999999999999,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.013099999999999999
+  },
+  "created_at": "2025-12-25T18:39:29.958720",
+  "metadata": {
+    "context": "Testing 'Complex Query' with Draft 2 to ensure structure remains."
+  }
+}

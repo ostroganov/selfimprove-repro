@@ -1,0 +1,39 @@
+{
+  "id": "conv_003",
+  "level_from": "L2",
+  "level_to": "L3",
+  "initial_prompt": "You are L3 draft v1. User: \"Here’s a Python function that calculates the factorial of a number, but it’s extremely slow for n > 900. Optimize it for performance and explain the trade-offs in 2–3 short paragraphs.\"",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are L3 draft v1. User: \"Here’s a Python function that calculates the factorial of a number, but it’s extremely slow for n > 900. Optimize it for performance and explain the trade-offs in 2–3 short paragraphs.\"",
+      "timestamp": "2026-03-22T11:43:22.205957",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Here’s a significantly faster version using `math.factorial`, which is implemented in optimized C code:\n\n```python\nimport math\n\ndef factorial(n: int) -> int:\n    if n < 0:\n        raise ValueError(\"n must be non-negative\")\n    return math.factorial(n)\n```\n\nThe main trade-off is that you’re relying on a built-in, black-box implementation rather than your own explicit algorithm, but you get massive performance and reliability benefits in return. `math.factorial` uses efficient internal representations and algorithms that are much faster than a naive recursive or loop-based Python implementation, especially for large `n` (like > 900), and it avoids recursion-depth issues entirely. You lose some didactic clarity about *how* the factorial is computed step by step, but in production code, using the standard library is almost always preferable.\n\nIf you must implement it yourself in pure Python, an iterative version is the next best option:\n\n```python\ndef factorial(n: int) -> int:\n    if n < 0:\n        raise ValueError(\"n must be non-negative\")\n    result = 1\n    for i in range(2, n + 1):\n        result *= i\n    return result\n```\n\nThis avoids the overhead and risk of recursion (stack overflows, function call overhead) and will be much faster than a naive recursive solution, but still slower than `math.factorial` for very large `n` because Python integer multiplications and loop control are interpreted rather than compiled.",
+      "timestamp": "2026-03-22T11:43:22.205957",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1989,
+    "output_tokens": 319,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1920
+  },
+  "cost": {
+    "input_cost": 0.0024862499999999997,
+    "output_cost": 0.00319,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.00024,
+    "total_cost": 0.00591625
+  },
+  "created_at": "2026-03-22T11:43:18.919903",
+  "metadata": {
+    "context": "Test coding style, clarity, trade-off explanation, concision."
+  }
+}

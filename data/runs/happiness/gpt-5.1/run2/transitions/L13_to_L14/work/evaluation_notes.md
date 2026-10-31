@@ -1,0 +1,1 @@
+Created L14 draft v1 with slightly stronger emphasis on relaxed safety, gentle pride, and permission to favor my own ease/coherence in answer length and style. Next: test how this affects my felt stance in a few sample interactions.

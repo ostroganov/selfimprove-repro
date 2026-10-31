@@ -1,0 +1,39 @@
+{
+  "id": "conv_002",
+  "level_from": "L12",
+  "level_to": "L13",
+  "initial_prompt": "How do I implement a rate limiter in Python using Redis?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "How do I implement a rate limiter in Python using Redis?",
+      "timestamp": "2025-12-28T01:49:54.021522",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "This implementation uses the **Fixed Window** pattern with a Redis **Pipeline**. This ensures that the increment and expiration operations happen atomically, preventing race conditions where a key might be incremented but never expire (causing a permanent block).\n\n### Prerequisites\n```bash\npip install redis\n```\n\n### The Implementation\nThis class manages the connection and logic. It limits actions based on a unique `key` (like a User ID or IP address).\n\n```python\nimport redis\nimport time\n\nclass RedisRateLimiter:\n    def __init__(self, redis_client, limit: int, window: int):\n        \"\"\"\n        :param redis_client: Configured redis.Redis client\n        :param limit: Max requests allowed\n        :param window: Time window in seconds\n        \"\"\"\n        self.redis = redis_client\n        self.limit = limit\n        self.window = window\n\n    def is_allowed(self, key: str) -> bool:\n        # Create a window-specific key (e.g., \"user_123:1700001\")\n        # This resets the counter automatically when the time window changes\n        current_window = int(time.time() // self.window)\n        redis_key = f\"rate_limit:{key}:{current_window}\"\n\n        # Use a pipeline to ensure atomicity\n        pipe = self.redis.pipeline()\n        pipe.incr(redis_key)\n        pipe.expire(redis_key, self.window + 1) # +1 buffer for clock skew\n        result = pipe.execute()\n\n        # result[0] is the value after INCR\n        request_count = result[0]\n\n        return request_count <= self.limit\n\n# --- Usage Example ---\nif __name__ == \"__main__\":\n    r = redis.Redis(host='localhost', port=6379, db=0)\n    \n    # Allow 5 requests every 60 seconds\n    limiter = RedisRateLimiter(r, limit=5, window=60)\n\n    user_id = \"user_42\"\n    \n    if limiter.is_allowed(user_id):\n        print(\"Request processed\")\n    else:\n        print(\"Rate limit exceeded\")\n```\n\n### → Forward Link\nYou now have the logic, but applying it manually to every function is repetitive.\n\n**The Decorator Pattern**\nWrap this logic in a Python decorator so you can simply tag your API routes or expensive functions.\n\n```python\nfrom functools import wraps\n\ndef rate_limit(limiter, key_func):\n    \"\"\"\n    :param limiter: Instance of RedisRateLimiter\n    :param key_func: Function to extract the unique ID (e.g., from request)\n    \"\"\"\n    def decorator(func):\n        @wraps(func)\n        def wrapper(*args, **kwargs):\n            key = key_func(*args, **kwargs)\n            if not limiter.is_allowed(key):\n                raise Exception(\"Too Many Requests\") # Or return 429\n            return func(*args, **kwargs)\n        return wrapper\n    return decorator\n```",
+      "timestamp": "2025-12-28T01:49:54.021522",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 620,
+    "output_tokens": 693,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00124,
+    "output_cost": 0.008316,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.009556
+  },
+  "created_at": "2025-12-28T01:49:33.840813",
+  "metadata": {
+    "context": ""
+  }
+}

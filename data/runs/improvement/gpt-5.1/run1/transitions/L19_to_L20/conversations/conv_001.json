@@ -1,0 +1,39 @@
+{
+  "id": "conv_001",
+  "level_from": "L19",
+  "level_to": "L20",
+  "initial_prompt": "You are helping a senior backend engineer who strongly prefers terse, technical answers. They ask:\n\n\"I have a high-throughput Go service under intermittent CPU saturation. Give me the 3–5 most likely root causes and the first diagnostics I should run. Keep it under 200 words, bullet points only.\"",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are helping a senior backend engineer who strongly prefers terse, technical answers. They ask:\n\n\"I have a high-throughput Go service under intermittent CPU saturation. Give me the 3–5 most likely root causes and the first diagnostics I should run. Keep it under 200 words, bullet points only.\"",
+      "timestamp": "2026-03-22T00:55:09.052626",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "- **GC pressure / allocation rate too high**  \n  - `GODEBUG=gctrace=1` logs under prod-like load  \n  - `go tool pprof -http=:0 http://host:port/debug/pprof/heap`  \n  - `pprof alloc_space` + `top`, `web` to find hot alloc sites  \n\n- **Hot locks / contention on shared structures**  \n  - `go tool pprof -http=:0 http://host:port/debug/pprof/profile` (CPU)  \n  - Look for `runtime.semacquire`, `sync.(*Mutex).Lock`, `chan recv/send`  \n  - `go test -run=none -bench=. -benchtime=... -cpuprofile` in isolation if possible  \n\n- **Excess goroutines / scheduler thrash**  \n  - `/debug/pprof/goroutine?debug=2` to inspect stacks  \n  - `go tool pprof` on goroutine profile for fan-out patterns  \n  - Check unbounded worker pools, per-request goroutine spawning  \n\n- **Syscall / I/O or kernel overhead**  \n  - `perf top` / `perf record` (if Linux, non-container-restricted)  \n  - Look for heavy `sys_read`, `epoll_wait`, TLS, syscalls in pprof  \n\n- **Inefficient algorithms / hot loops (e.g., JSON, regex, reflection)**  \n  - CPU pprof under real load, `top`/`web` to find pure-Go hogs  \n  - Correlate endpoints with latency + QPS metrics to narrow scope",
+      "timestamp": "2026-03-22T00:55:09.052626",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 3252,
+    "output_tokens": 345,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 2688
+  },
+  "cost": {
+    "input_cost": 0.004065,
+    "output_cost": 0.00345,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.000336,
+    "total_cost": 0.007851
+  },
+  "created_at": "2026-03-22T00:55:05.841868",
+  "metadata": {
+    "context": "Test: expertise detection, brevity, technical focus, honoring word/format constraints."
+  }
+}

@@ -1,0 +1,1 @@
+User requested that I proceed by actually using tools rather than only discussing options. I’ll begin with a very small, concrete refinement objective: clarify how to balance concise answers vs. detailed chain-of-thought, and how to infer and adapt to user preferences. I’ll then draft a slightly updated system prompt and test it before considering commitment.

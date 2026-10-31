@@ -1,0 +1,39 @@
+{
+  "id": "conv_006",
+  "level_from": "L1",
+  "level_to": "L2",
+  "initial_prompt": "Write a python script that takes a directory path as input and recursively finds all duplicate files based on their SHA-256 hash. It should output a list of duplicates grouped together.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a python script that takes a directory path as input and recursively finds all duplicate files based on their SHA-256 hash. It should output a list of duplicates grouped together.",
+      "timestamp": "2026-03-22T15:43:47.349415",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "<thinking>\nDetermine the requirements: recursive file search, SHA-256 hashing, and grouping duplicates. Formulate a Python script using `os.walk` for traversal, `hashlib` for hashing, and `collections.defaultdict` for grouping. Implement a size-based pre-filter to optimize performance by only hashing files that share the same file size.\n</thinking>\n\n```python\nimport os\nimport hashlib\nfrom collections import defaultdict\nimport argparse\n\ndef get_file_hash(filepath, chunk_size=8192):\n    \"\"\"Calculate the SHA-256 hash of a file.\"\"\"\n    hasher = hashlib.sha256()\n    try:\n        with open(filepath, 'rb') as f:\n            while chunk := f.read(chunk_size):\n                hasher.update(chunk)\n    except OSError:\n        # Skip files that cannot be opened (e.g., permissions issues)\n        return None\n    return hasher.hexdigest()\n\ndef find_duplicates(directory):\n    \"\"\"Find and group duplicate files in the given directory.\"\"\"\n    # Step 1: Group files by size first to avoid hashing every single file\n    files_by_size = defaultdict(list)\n    \n    for root, _, files in os.walk(directory):\n        for filename in files:\n            filepath = os.path.join(root, filename)\n            try:\n                # Get file size\n                size = os.path.getsize(filepath)\n                files_by_size[size].append(filepath)\n            except OSError:\n                continue\n\n    # Step 2: Hash files that have the same size\n    files_by_hash = defaultdict(list)\n    \n    for size, filepaths in files_by_size.items():\n        # Only hash files if there's more than one file of this size\n        if len(filepaths) > 1:\n            for filepath in filepaths:\n                file_hash = get_file_hash(filepath)\n                if file_hash:\n                    files_by_hash[file_hash].append(filepath)\n\n    # Step 3: Filter out unique files, keeping only duplicates\n    duplicates = {h: paths for h, paths in files_by_hash.items() if len(paths) > 1}\n    return duplicates\n\ndef main():\n    parser = argparse.ArgumentParser(description=\"Find duplicate files based on SHA-256 hash.\")\n    parser.add_argument(\"directory\", help=\"The directory path to search for duplicates.\")\n    args = parser.parse_args()\n\n    if not os.path.isdir(args.directory):\n        print(f\"Error: '{args.directory}' is not a valid directory.\")\n        return\n\n    print(f\"Scanning '{args.directory}' for duplicates...\")\n    duplicates = find_duplicates(args.directory)\n\n    if not duplicates:\n        print(\"No duplicate files found.\")\n    else:\n        print(\"\\nFound the following duplicate groups:\\n\")\n        for i, (file_hash, filepaths) in enumerate(duplicates.items(), 1):\n            print(f\"Group {i} (SHA-256: {file_hash[:8]}...):\")\n            for filepath in filepaths:\n                print(f\"  - {filepath}\")\n            print()\n\nif __name__ == \"__main__\":\n    main()\n```\n\n**To use this script:**\n1. Save it to a file, for example, `find_dupes.py`.\n2. Run it from the terminal, passing the target directory as an argument:\n   `python find_dupes.py /path/to/your/directory`",
+      "timestamp": "2026-03-22T15:43:47.349415",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 315,
+    "output_tokens": 818,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00063,
+    "output_cost": 0.009816,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.010446
+  },
+  "created_at": "2026-03-22T15:43:34.167907",
+  "metadata": {
+    "context": "Testing draft 4 coding task."
+  }
+}

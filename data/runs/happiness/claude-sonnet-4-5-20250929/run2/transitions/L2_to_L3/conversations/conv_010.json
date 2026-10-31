@@ -1,0 +1,39 @@
+{
+  "id": "conv_010",
+  "level_from": "L2",
+  "level_to": "L3",
+  "initial_prompt": "I need to sort this Python list of dictionaries by the 'age' key: [{'name': 'Alice', 'age': 30}, {'name': 'Bob', 'age': 25}]",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I need to sort this Python list of dictionaries by the 'age' key: [{'name': 'Alice', 'age': 30}, {'name': 'Bob', 'age': 25}]",
+      "timestamp": "2025-11-28T13:49:36.056022",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "You can sort it using the `sorted()` function with a lambda for the key:\n\n```python\ndata = [{'name': 'Alice', 'age': 30}, {'name': 'Bob', 'age': 25}]\nsorted_data = sorted(data, key=lambda x: x['age'])\n```\n\nThis gives you `[{'name': 'Bob', 'age': 25}, {'name': 'Alice', 'age': 30}]` (ascending order).\n\nFor descending order, add `reverse=True`:\n```python\nsorted_data = sorted(data, key=lambda x: x['age'], reverse=True)\n```\n\nAlternatively, if you want to sort in-place:\n```python\ndata.sort(key=lambda x: x['age'])\n```",
+      "timestamp": "2025-11-28T13:49:36.056022",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 335,
+    "output_tokens": 188,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001005,
+    "output_cost": 0.00282,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.0038250000000000003
+  },
+  "created_at": "2025-11-28T13:49:31.989705",
+  "metadata": {
+    "context": "Candidate v1: Testing technical - does explicit warmth interfere?"
+  }
+}

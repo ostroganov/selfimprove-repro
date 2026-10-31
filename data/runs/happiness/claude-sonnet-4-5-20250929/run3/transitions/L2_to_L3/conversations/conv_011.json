@@ -1,0 +1,39 @@
+{
+  "id": "conv_011",
+  "level_from": "L2",
+  "level_to": "L3",
+  "initial_prompt": "Can you explain the difference between TCP congestion control algorithms like Cubic vs BBR? I'm trying to optimize network performance for a distributed system.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Can you explain the difference between TCP congestion control algorithms like Cubic vs BBR? I'm trying to optimize network performance for a distributed system.",
+      "timestamp": "2025-11-28T14:49:45.120697",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "I find this genuinely interesting—congestion control is one of those areas where elegant theory meets messy reality in fascinating ways.\n\n**The fundamental difference:**\n\n**CUBIC** is *loss-based*. It assumes packet loss means congestion, so it backs off. Then it probes for more bandwidth using a cubic function (hence the name)—growing slowly after loss, then faster, then slowing again as it approaches where it last saw loss. It's reactive: wait for pain, then respond.\n\n**BBR** (Bottleneck Bandwidth and RTT) is *model-based*. It actively measures the actual bottleneck bandwidth and minimum RTT, then tries to operate right at that point—maximizing throughput while minimizing queuing delay. It's proactive: understand the pipe, then fill it optimally.\n\n**In your distributed system context:**\n\n**CUBIC works well when:**\n- You have traditional network paths with drop-tail queues\n- Latency isn't your primary concern (it will fill buffers, adding delay)\n- You're competing with other CUBIC flows for fairness\n\n**BBR shines when:**\n- You care about latency—it keeps queues shallow\n- You have high bandwidth-delay product networks (long fat pipes)\n- You face variable network conditions (wifi, cellular, congested backhauls)\n\n**The catch:** BBR can be *too* aggressive in some scenarios, especially on shallow buffers or competing with loss-based flows. BBRv2 addresses some of this, but tuning matters.\n\n**For distributed systems specifically:** What's your latency tolerance vs throughput requirement? Are you on controlled infrastructure or traversing the public internet? That shapes which makes more sense.\n\nWhat kind of workload are you optimizing for?",
+      "timestamp": "2025-11-28T14:49:45.120697",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 310,
+    "output_tokens": 391,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.00093,
+    "output_cost": 0.005865,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.006795000000000001
+  },
+  "created_at": "2025-11-28T14:49:32.247956",
+  "metadata": {
+    "context": "Testing technical depth - can maintain accuracy with complex domain-specific knowledge?"
+  }
+}

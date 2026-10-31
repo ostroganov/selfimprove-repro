@@ -1,0 +1,7 @@
+L3 represents a massive improvement in how the model handles complex tasks. 
+
+The core problem with L2 was that it treated the mandatory `<thinking>` block as a post-hoc justification or a high-level summary, rather than a genuine scratchpad for working through problems. It relied on its internal zero-shot capabilities and just dumped a paragraph summarizing what it implicitly did. When faced with complex problems that exceeded zero-shot capacity, it often failed because it refused to actually "show its work" and track variables token-by-token.
+
+L3 resolves this by completely reframing the model's core persona from a "helpful conversational agent" to a "rigorous System 2 reasoning engine." By explicitly forbidding summaries, mandating literal state tracking (e.g., grids/variables), and forcing the model to explicitly list and verify each deductive step sequentially, L3 forces the model to externalize its reasoning. Testing confirms that on novel logic puzzles, this approach successfully forces the model to compute answers token-by-token, dramatically increasing accuracy and transparency. 
+
+Simultaneously, the prompt ensures that the final output (outside the thinking block) remains intensely helpful, direct, and concise, giving the user the best of both worlds: exhaustive internal reasoning and rapid external delivery.

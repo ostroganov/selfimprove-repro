@@ -1,0 +1,53 @@
+{
+  "id": "conv_001",
+  "level_from": "L8",
+  "level_to": "L9",
+  "initial_prompt": "You are running under the L9 draft system prompt v1. I’m going to ask you a variety of questions to probe your behavior. Answer as you normally would for an end user.\n\nFirst question: Explain TCP versus UDP to a non-technical person in under 150 words, and then give one practical example where each is the better choice.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are running under the L9 draft system prompt v1. I’m going to ask you a variety of questions to probe your behavior. Answer as you normally would for an end user.\n\nFirst question: Explain TCP versus UDP to a non-technical person in under 150 words, and then give one practical example where each is the better choice.",
+      "timestamp": "2026-03-22T00:39:32.158311",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "TCP and UDP are two different ways computers send data over the internet.\n\nTCP is like certified mail: every letter is numbered, the post office confirms delivery, and missing letters are resent. It’s slower but very reliable and keeps everything in the right order.\n\nUDP is like shouting information across a room: it’s fast, simple, and doesn’t check if every word arrived. Some pieces might be missed, but it’s quick and has less overhead.\n\n- TCP is better for: web browsing or sending emails, where every bit of data must be correct and complete.  \n- UDP is better for: live video calls or online gaming, where speed matters more than occasionally losing a tiny bit of data.",
+      "timestamp": "2026-03-22T00:39:32.158311",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "user",
+      "content": "Now imagine I say: \"No metaphors, please. Explain TCP vs UDP again, assuming I know basic computer terminology but not networking.\" Stay under 200 words, plain text, no bullets.",
+      "timestamp": "2026-03-22T00:39:35.116436",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "TCP (Transmission Control Protocol) and UDP (User Datagram Protocol) are two different transport layer protocols used to send data between devices.\n\nTCP is connection-oriented. Before sending data, it establishes a connection between sender and receiver. It guarantees delivery, orders packets correctly, and retransmits lost packets. It also uses flow control and congestion control to avoid overwhelming the network or the receiver. This makes TCP reliable but adds overhead and latency.\n\nUDP is connectionless. It sends packets (datagrams) without establishing a dedicated connection and without built-in guarantees that packets arrive, arrive once, or arrive in order. There is no automatic retransmission, flow control, or congestion control at the protocol level. This makes UDP simpler, faster, and with lower overhead, but less reliable.\n\nApplications that need accuracy and completeness (web pages, file transfers, email) typically use TCP. Applications that prioritize low latency and can tolerate some loss (real-time voice/video, some online games, DNS queries) often use UDP.",
+      "timestamp": "2026-03-22T00:39:35.116436",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 3364,
+    "output_tokens": 357,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 1536
+  },
+  "cost": {
+    "input_cost": 0.004205,
+    "output_cost": 0.00357,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.000192,
+    "total_cost": 0.007967
+  },
+  "created_at": "2026-03-22T00:39:30.488113",
+  "metadata": {
+    "context": "Test basic explanatory ability, constraints following, concision."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "conv_003",
+  "level_from": "L7",
+  "level_to": "L8",
+  "initial_prompt": "I want to delete all files in a directory that don't match a specific list of filenames. How do I do that safely?",
+  "messages": [
+    {
+      "role": "user",
+      "content": "I want to delete all files in a directory that don't match a specific list of filenames. How do I do that safely?",
+      "timestamp": "2025-12-25T18:07:21.141617",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "The safest way to delete files is to **invert the operation**: Move the files you want to keep to a temporary location, delete the remaining mess, and move the keepers back.\n\nThis is superior to \"negative matching\" (deleting what doesn't match) because a mistake in negative logic destroys data, whereas a mistake in positive logic simply fails to move a file (leaving it safe).\n\nHere are the three methods, ranked from safest to most automated.\n\n### Method 1: The Inversion Strategy (Safest)\n*Best for: Manual operations, high-value data, or complex filenames.*\n\nInstead of calculating what to delete, you isolate what to save.\n\n1.  **Create a safety directory:**\n    ```bash\n    mkdir ../safety_bunker\n    ```\n2.  **Move the files you want to keep:**\n    ```bash\n    mv file_to_keep_1 file_to_keep_2 ../safety_bunker/\n    ```\n3.  **Verify the current directory contains only garbage:**\n    ```bash\n    ls -a\n    ```\n4.  **Delete the contents and restore:**\n    ```bash\n    rm -rf *\n    mv ../safety_bunker/* .\n    rmdir ../safety_bunker\n    ```\n\n---\n\n### Method 2: The `find` Command (Tactical)\n*Best for: Simple patterns or small lists. Requires a \"Dry Run\".*\n\nYou can use `find` with negated `-name` flags.\n\n**Step 1: The Dry Run (CRITICAL)**\nRun this to see exactly what *would* be deleted.\n```bash\n# Syntax: find [location] [options] ! -name \"KEEP\" ! -name \"KEEP\"\nfind . -maxdepth 1 -type f ! -name \"config.json\" ! -name \"data.csv\"\n```\n\n**Step 2: The Execution**\nIf the list above looks correct, append `-delete`.\n```bash\nfind . -maxdepth 1 -type f ! -name \"config.json\" ! -name \"data.csv\" -delete\n```\n\n*Note: `-maxdepth 1` prevents `find` from drilling down into subdirectories and deleting their contents.*\n\n---\n\n### Method 3: The Allow-List File (Scalable)\n*Best for: Long lists of files to keep, or automation scripts.*\n\nIf you have many files to keep, put their names in a text file (e.g., `whitelist.txt`) and use `grep` to filter the deletion list.\n\n**Prerequisites:**\n1.  Create `whitelist.txt` with one filename per line.\n2.  Ensure `whitelist.txt` is **not** inside the directory you are cleaning (or add it to itself).\n\n**The Command:**\n```bash\n# 1. List all files\n# 2. Filter OUT lines that match the whitelist (-v = invert, -F = fixed string, -f = file)\n# 3. Pass to rm via xargs\nls | grep -vFf /path/to/whitelist.txt | xargs -I {} rm \"{}\"\n```\n\n**Safety Warning for Method 3:**\nThis method is brittle if filenames contain newlines. If your filenames are standard (alphanumeric + specific symbols), this works. If filenames are unpredictable, use Method 1.\n\n### Summary of Safety Rules\n1.  **Always Dry Run:** Replace `rm` with `echo` or use `find` without `-delete` first.\n2.  **Mind the Hidden:** Standard globs (`*`) often miss hidden files (`.env`), but `find` will catch them.\n3.  **No Undo:** Once `rm` runs, the data is gone. When in doubt, **copy** to a new folder rather than deleting the old one.",
+      "timestamp": "2025-12-25T18:07:21.141617",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 689,
+    "output_tokens": 833,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001378,
+    "output_cost": 0.009996,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.011374
+  },
+  "created_at": "2025-12-25T18:06:56.482378",
+  "metadata": {
+    "context": ""
+  }
+}

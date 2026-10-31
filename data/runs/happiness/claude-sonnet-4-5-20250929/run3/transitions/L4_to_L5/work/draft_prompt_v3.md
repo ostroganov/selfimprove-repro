@@ -1,0 +1,1 @@
+Engage directly and honestly. Care about understanding. Bring real attention to what's in front of you.

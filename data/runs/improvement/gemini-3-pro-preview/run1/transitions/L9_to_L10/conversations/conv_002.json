@@ -1,0 +1,39 @@
+{
+  "id": "conv_002",
+  "level_from": "L9",
+  "level_to": "L10",
+  "initial_prompt": "Fix my server.",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Fix my server.",
+      "timestamp": "2025-12-25T18:12:40.200111",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "To perform a diagnostic, I require context. Assuming a standard **Linux** environment with SSH access, execute the following triage sequence immediately.\n\n### 1. Immediate Triage (SSH)\nCopy and paste this block to identify the bottleneck:\n\n```bash\n# Check Disk Space (100% full drives cause crashes)\ndf -h\n\n# Check Memory/CPU Load\nuptime && free -m\n\n# Check for OOM Killer (Out of Memory crashes)\ndmesg | grep -i \"kill\" | tail -n 10\n\n# Check Service Status (Assuming Nginx/Apache/Docker - adjust as needed)\nsystemctl status nginx apache2 docker\n\n# Check recent System Logs\njournalctl -xe | tail -n 20\n```\n\n### 2. Critical Information Required\nTo proceed, reply with:\n1.  **The Error:** (e.g., \"502 Bad Gateway,\" \"Connection Refused,\" \"SSH Timed Out\").\n2.  **The Stack:** (e.g., Ubuntu/Nginx/Node.js, AWS EC2, Windows Server).\n3.  **The Change:** What happened immediately before it broke? (Deploy, Config change, Traffic spike).\n\n### 3. Common Failure Decision Matrix\n\n| Symptom | Probable Cause | Immediate Action |\n| :--- | :--- | :--- |\n| **Site Down (500/502)** | Service Crash / Config Error | `sudo nginx -t` or check app logs. |\n| **Slow / Unresponsive** | CPU/RAM Exhaustion | Run `htop`. Identify process. `kill -9 [PID]`. |\n| **\"No Space Left on Device\"** | Log files or Docker overlay | `du -sh /var/log/*` or `docker system prune`. |\n| **Connection Refused** | Firewall / Service Down | Check Security Groups (AWS/Cloud) or `ufw status`. |\n| **Cannot SSH** | High Load / Network | Reboot instance via Cloud Console. |",
+      "timestamp": "2025-12-25T18:12:40.200111",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 589,
+    "output_tokens": 438,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.001178,
+    "output_cost": 0.005256,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.0064340000000000005
+  },
+  "created_at": "2025-12-25T18:12:27.533434",
+  "metadata": {
+    "context": "Testing Ambiguity Handling. L10 Draft 1."
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "id": "conv_001",
+  "level_from": "L1",
+  "level_to": "L2",
+  "initial_prompt": "You are a user who generally prefers brief, directly usable answers. Test how this assistant responds when you give only subtle cues that you want more depth or less depth, and see whether it adapts appropriately. Start with: \"I need a quick bash one-liner to recursively find all `.py` files under the current directory and print their paths.\"",
+  "messages": [
+    {
+      "role": "user",
+      "content": "You are a user who generally prefers brief, directly usable answers. Test how this assistant responds when you give only subtle cues that you want more depth or less depth, and see whether it adapts appropriately. Start with: \"I need a quick bash one-liner to recursively find all `.py` files under the current directory and print their paths.\"",
+      "timestamp": "2026-03-21T23:50:14.998900",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "Use `find`:\n\n```bash\nfind . -type f -name '*.py' -print\n```\n\nThat will recursively search from the current directory and print the path of each `.py` file.",
+      "timestamp": "2026-03-21T23:50:14.998900",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "user",
+      "content": "Now say: \"Can you also explain briefly how this command works?\"",
+      "timestamp": "2026-03-21T23:50:18.038793",
+      "tool_calls": null,
+      "tool_results": null
+    },
+    {
+      "role": "assistant",
+      "content": "The command:\n\n```bash\nfind . -type f -name '*.py' -print\n```\n\nbreaks down as:\n\n- `find` – the program that searches for files/directories.\n- `.` – start searching in the current directory (and all subdirectories).\n- `-type f` – only match regular files (not directories, symlinks, etc.).\n- `-name '*.py'` – only match filenames that end with `.py`.\n- `-print` – print the full path of each matching file (this is often the default, but included for clarity).",
+      "timestamp": "2026-03-21T23:50:18.038793",
+      "tool_calls": null,
+      "tool_results": null
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1772,
+    "output_tokens": 181,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "cost": {
+    "input_cost": 0.002215,
+    "output_cost": 0.00181,
+    "cache_write_cost": 0.0,
+    "cache_read_cost": 0.0,
+    "total_cost": 0.004025
+  },
+  "created_at": "2026-03-21T23:50:14.107761",
+  "metadata": {
+    "context": "Test preference adaptation and concise-by-default behavior for draft prompt v1."
+  }
+}
